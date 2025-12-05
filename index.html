@@ -1,152 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The Table Well • Your Inheritance Is Served</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Table Well • Your Inheritance Is Served</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="/manifest.json" />  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>  <script type="module" src="/router.js"></script></head><body>
+  <div class="background"></div>  <div class="page-shell">
+    <header class="hero">
+      <h1 class="hero-title">Your Inheritance is Served</h1>
+      <p class="hero-subtitle">Sit and Feast</p>
+    </header><section class="chat-section">
+  <form id="table-form" class="chat-form">
+    <div class="chat-input-shell">
+      <button
+        type="button"
+        class="icon-btn"
+        aria-label="Attach a gift or file to the Table"
+      >
+        📎
+      </button>
 
-<style>
-/* RESET */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+      <input
+        id="table-input"
+        class="chat-input"
+        type="text"
+        autocomplete="off"
+        placeholder="Share the vision you long to build at the Table…"
+      />
 
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    font-family: "Georgia", serif;
-}
+      <button
+        type="button"
+        class="icon-btn"
+        aria-label="Speak to the Table"
+      >
+        🎙
+      </button>
 
-/* FULLSCREEN BACKGROUND */
-.background {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-image: url('Table_Well.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    filter: brightness(0.72);
-    z-index: -1;
-}
-
-/* TITLE AREA */
-.center-container {
-    width: 100%;
-    text-align: center;
-    margin-top: 8vh;
-}
-.title {
-    font-size: 2.8rem;
-    color: #e4cfa3;
-    text-shadow: 0 0 12px rgba(0,0,0,0.75);
-}
-.subtitle {
-    margin-top: 0.7rem;
-    font-size: 1.2rem;
-    color: #e4cfa3;
-    opacity: 0.9;
-}
-
-/* CHAT BAR */
-.chat-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 5vh;
-}
-.chat-input {
-    width: 75%;
-    max-width: 420px;
-    padding: 12px 16px;
-    font-size: 1.1rem;
-    border-radius: 12px;
-    border: none;
-    outline: none;
-    background: rgba(0,0,0,0.45);
-    color: #f3d9bd;
-    backdrop-filter: blur(4px);
-}
-.chat-input::placeholder {
-    color: rgba(255,210,180,0.55);
-}
-
-/* FOOTER */
-.footer-container {
-    width: 100%;
-    text-align: center;
-    margin-top: 14vh;
-    margin-bottom: 6vh;
-}
-.footer-text {
-    color: #e4cfa3;
-    text-shadow: 0 0 8px rgba(0,0,0,0.7);
-    font-size: 1rem;
-    opacity: 0.9;
-}
-.brand {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.4rem;
-}
-.line {
-    margin-bottom: 0.4rem;
-    font-size: 1rem;
-}
-.quote {
-    margin-top: 1rem;
-    font-size: 0.95rem;
-    opacity: 0.85;
-}
-.rights {
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    opacity: 0.75;
-}
-
-/* MOBILE */
-@media (max-width: 480px) {
-    .title { font-size: 2.2rem; }
-    .subtitle { font-size: 1rem; }
-    .chat-input { width: 82%; }
-}
-</style>
-</head>
-
-<body>
-
-<div class="background"></div>
-
-<div class="center-container">
-    <div class="title">Your Inheritance is Served</div>
-    <div class="subtitle">Sit and Feast</div>
-</div>
-
-<div class="chat-wrapper">
-    <input 
-        class="chat-input" 
-        type="text" 
-        placeholder="Speak your heart to the Table…" 
-    />
-</div>
-
-<div class="footer-container">
-    <div class="footer-text">
-        <div class="brand">AKDmediaX</div>
-
-        <div class="line">A Creative Fellowship Where Tech Bows to Presence</div>
-        <div class="line">Redeeming Abba’s Kingdom Design</div>
-
-        <div class="quote">
-            “Embrace the truth and hold it close.  
-            Don’t let go of wisdom, instruction, and  
-            life-giving understanding.” — TPT
-        </div>
-
-        <div class="rights">
-            © 2025 AKDmediaX — All Rights Reserved.
-        </div>
+      <button
+        type="submit"
+        class="icon-btn send-btn"
+        aria-label="Send your words to the Table"
+      >
+        ➤
+      </button>
     </div>
-</div>
+  </form>
+</section>
 
+<footer class="footer-container">
+  <div class="footer-text">
+    <div class="brand">AKDmediaX</div>
+
+    <div class="line">
+      A Creative Fellowship Where Tech Bows to Presence
+    </div>
+
+    <div class="line">
+      Redeeming Abba’s Kingdom Design
+    </div>
+
+    <div class="quote">
+      “Embrace the truth and hold it close.<br>
+      Don’t let go of wisdom, instruction, and life-giving understanding.” — TPT
+    </div>
+
+    <div class="rights">
+      © 2025 AKDmediaX — All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+  </div>
 </body>
 </html>

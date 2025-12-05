@@ -1,152 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-  <title>The Table Well • Your Inheritance Is Served</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Table Well • Your Inheritance Is Served</title>
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="/manifest.json" />
+<style>
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js");
-    }
-  </script>
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    font-family: "Georgia", serif;
+}
 
-  <!-- Keep router hook for future navigation if needed -->
-  <script type="module" src="/router.js"></script>
+/* FULLSCREEN BACKGROUND */
+.background {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url('Table_Well.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(0.72);
+    z-index: -1;
+}
+
+/* TITLE AREA */
+.center-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 8vh;
+}
+.title {
+    font-size: 2.8rem;
+    color: #e4cfa3;
+    text-shadow: 0 0 12px rgba(0,0,0,0.75);
+}
+.subtitle {
+    margin-top: 0.7rem;
+    font-size: 1.2rem;
+    color: #e4cfa3;
+    opacity: 0.9;
+}
+
+/* CHAT BAR */
+.chat-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 5vh;
+}
+.chat-input {
+    width: 75%;
+    max-width: 420px;
+    padding: 12px 16px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: rgba(0,0,0,0.45);
+    color: #f3d9bd;
+    backdrop-filter: blur(4px);
+}
+.chat-input::placeholder {
+    color: rgba(255,210,180,0.55);
+}
+
+/* FOOTER */
+.footer-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 14vh;
+    margin-bottom: 6vh;
+}
+.footer-text {
+    color: #e4cfa3;
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    font-size: 1rem;
+    opacity: 0.9;
+}
+.brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+}
+.line {
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+}
+.quote {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+.rights {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+    .title { font-size: 2.2rem; }
+    .subtitle { font-size: 1rem; }
+    .chat-input { width: 82%; }
+}
+</style>
 </head>
 
 <body>
-  <!-- Full-screen background image -->
-  <div class="background"></div>
 
-  <!-- Main page layout -->
-  <div class="page-shell">
-    <!-- HERO / TITLE / CHAT BAR -->
-    <header class="hero">
-      <div class="hero-text">
-        <h1 class="hero-title">Your Inheritance is Served</h1>
-        <p class="hero-subtitle">Sit and Feast</p>
-      </div>
+<div class="background"></div>
 
-      <form id="table-form" class="chat-form" autocomplete="off">
-        <input
-          id="table-input"
-          class="chat-input"
-          type="text"
-          placeholder="Speak your heart to the Table..."
-        />
-        <button type="submit" class="chat-send">Send</button>
-      </form>
-    </header>
+<div class="center-container">
+    <div class="title">Your Inheritance is Served</div>
+    <div class="subtitle">Sit and Feast</div>
+</div>
 
-    <!-- CONVERSATION SHELL -->
-    <main class="conversation-shell">
-      <button
-        id="toggle-thread"
-        class="thread-toggle"
-        type="button"
-      >
-        Table Conversation
-      </button>
+<div class="chat-wrapper">
+    <input 
+        class="chat-input" 
+        type="text" 
+        placeholder="Speak your heart to the Table…" 
+    />
+</div>
 
-      <section
-        id="thread-panel"
-        class="thread-panel"
-        aria-label="Table Conversation"
-      >
-        <h2 class="thread-title">Table Conversation</h2>
-        <div id="thread-messages" class="thread-messages">
-          <p class="thread-placeholder">
-            The Table is listening. Your words matter.
-          </p>
-        </div>
-      </section>
-    </main>
+<div class="footer-container">
+    <div class="footer-text">
+        <div class="brand">AKDmediaX</div>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div class="footer-brand">AKDmediaX</div>
+        <div class="line">A Creative Fellowship Where Tech Bows to Presence</div>
+        <div class="line">Redeeming Abba’s Kingdom Design</div>
 
-        <div class="footer-line">
-          A Creative Fellowship Where Tech Bows to Presence
-        </div>
+        <div class="quote">
+            “Embrace the truth and hold it close.  
+            Don’t let go of wisdom, instruction, and  
+            life-giving understanding.” — TPT
+        </div>
 
-        <div class="footer-line">
-          Redeeming Abba’s Kingdom Design
-        </div>
+        <div class="rights">
+            © 2025 AKDmediaX — All Rights Reserved.
+        </div>
+    </div>
+</div>
 
-        <div class="footer-quote">
-          “Embrace the truth and hold it close.<br />
-          Don’t let go of wisdom, instruction, and life-giving
-          understanding.” — TPT
-        </div>
-
-        <div class="footer-rights">
-          © 2025 AKDmediaX — All Rights Reserved.
-        </div>
-      </div>
-    </footer>
-  </div>
-
-  <!-- Minimal front-end logic: open the thread on first send and
-       echo the words so the Table feels alive while we wait for the
-       real back-end to be wired in. -->
-  <script>
-    (function () {
-      const form = document.getElementById("table-form");
-      const input = document.getElementById("table-input");
-      const panel = document.getElementById("thread-panel");
-      const toggle = document.getElementById("toggle-thread");
-      const messages = document.getElementById("thread-messages");
-
-      if (!form || !input || !panel || !toggle || !messages) return;
-
-      function openPanel() {
-        panel.classList.add("open");
-      }
-
-      function addMessage(role, text) {
-        const p = document.createElement("p");
-        p.className =
-          role === "user" ? "msg msg-user" : "msg msg-table";
-        p.textContent = text;
-        messages.appendChild(p);
-      }
-
-      toggle.addEventListener("click", () => {
-        panel.classList.toggle("open");
-      });
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const value = input.value.trim();
-        if (!value) return;
-
-        // Clear placeholder on first real message
-        const placeholder = messages.querySelector(
-          ".thread-placeholder"
-        );
-        if (placeholder) {
-          placeholder.remove();
-        }
-
-        openPanel();
-        addMessage("user", value);
-        addMessage(
-          "table",
-          "The Table has received your words and is preparing a response."
-        );
-
-        input.value = "";
-      });
-    })();
-  </script>
 </body>
 </html>

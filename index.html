@@ -1,76 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The Table Well • Your Inheritance Is Served</title>
-<link rel="stylesheet" href="style.css" />
-<link rel="manifest" href="/manifest.json" />
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>The Table Well • Your Inheritance Is Served</title>
 
-<script>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
-}
-</script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="/manifest.json" />
 
-<script type="module" src="/router.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
+  </script>
+
+  <!-- Keep router hook for future navigation if needed -->
+  <script type="module" src="/router.js"></script>
 </head>
 
 <body>
-<div class="background"></div>
+  <!-- Full-screen background image -->
+  <div class="background"></div>
 
-<div class="page">
+  <!-- Main page layout -->
+  <div class="page-shell">
+    <!-- HERO / TITLE / CHAT BAR -->
+    <header class="hero">
+      <div class="hero-text">
+        <h1 class="hero-title">Your Inheritance is Served</h1>
+        <p class="hero-subtitle">Sit and Feast</p>
+      </div>
 
-    <div class="center-container">
-        <div class="center-text">
-            <div class="title">Your Inheritance is Served</div>
-            <div class="subtitle">Sit and Feast</div>
+      <form id="table-form" class="chat-form" autocomplete="off">
+        <input
+          id="table-input"
+          class="chat-input"
+          type="text"
+          placeholder="Speak your heart to the Table..."
+        />
+        <button type="submit" class="chat-send">Send</button>
+      </form>
+    </header>
 
-            <div class="chat-wrapper">
-                <div class="chat-input-row">
-                    <input
-                        type="text"
-                        class="chat-input"
-                        placeholder="Speak your heart to the Table..."
-                    />
-                    <button class="chat-send">Send</button>
-                </div>
-            </div>
+    <!-- CONVERSATION SHELL -->
+    <main class="conversation-shell">
+      <button
+        id="toggle-thread"
+        class="thread-toggle"
+        type="button"
+      >
+        Table Conversation
+      </button>
+
+      <section
+        id="thread-panel"
+        class="thread-panel"
+        aria-label="Table Conversation"
+      >
+        <h2 class="thread-title">Table Conversation</h2>
+        <div id="thread-messages" class="thread-messages">
+          <p class="thread-placeholder">
+            The Table is listening. Your words matter.
+          </p>
         </div>
-    </div>
+      </section>
+    </main>
 
-    <div class="footer-container">
-        <div class="footer-text">
-            <div class="brand">AKDmediaX</div>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">AKDmediaX</div>
 
-            <div class="line">
-                A Creative Fellowship Where Tech Bows to Presence
-            </div>
-
-            <div class="line">
-                Redeeming Abba’s Kingdom Design
-            </div>
-
-            <div class="quote">
-                “Embrace the truth and hold it close.<br>
-                Don’t let go of wisdom, instruction, and life-giving understanding.” — TPT
-            </div>
-
-            <div class="rights">
-                © 2025 AKDmediaX — All Rights Reserved.
-            </div>
+        <div class="footer-line">
+          A Creative Fellowship Where Tech Bows to Presence
         </div>
-    </div>
 
-    <!-- Right-side reply thread: closed by default.
-         When the Table responds, JS will add `.open` to `.thread-panel`. -->
-    <aside class="thread-panel" id="thread-panel">
-        <div class="thread-header">Table Conversation</div>
-        <div class="thread-body">
-            <!-- Responses will flow here from the back-end once wired. -->
+        <div class="footer-line">
+          Redeeming Abba’s Kingdom Design
         </div>
-    </aside>
 
-</div>
+        <div class="footer-quote">
+          “Embrace the truth and hold it close.<br />
+          Don’t let go of wisdom, instruction, and life-giving
+          understanding.” — TPT
+        </div>
+
+        <div class="footer-rights">
+          © 2025 AKDmediaX — All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Minimal front-end logic: open the thread on first send and
+       echo the words so the Table feels alive while we wait for the
+       real back-end to be wired in. -->
+  <script>
+    (function () {
+      const form = document.getElementById("table-form");
+      const input = document.getElementById("table-input");
+      const panel = document.getElementById("thread-panel");
+      const toggle = document.getElementById("toggle-thread");
+      const messages = document.getElementById("thread-messages");
+
+      if (!form || !input || !panel || !toggle || !messages) return;
+
+      function openPanel() {
+        panel.classList.add("open");
+      }
+
+      function addMessage(role, text) {
+        const p = document.createElement("p");
+        p.className =
+          role === "user" ? "msg msg-user" : "msg msg-table";
+        p.textContent = text;
+        messages.appendChild(p);
+      }
+
+      toggle.addEventListener("click", () => {
+        panel.classList.toggle("open");
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const value = input.value.trim();
+        if (!value) return;
+
+        // Clear placeholder on first real message
+        const placeholder = messages.querySelector(
+          ".thread-placeholder"
+        );
+        if (placeholder) {
+          placeholder.remove();
+        }
+
+        openPanel();
+        addMessage("user", value);
+        addMessage(
+          "table",
+          "The Table has received your words and is preparing a response."
+        );
+
+        input.value = "";
+      });
+    })();
+  </script>
 </body>
 </html>

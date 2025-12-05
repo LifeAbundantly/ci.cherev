@@ -1,107 +1,221 @@
-@DOCTYPE html
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Table Well • Your Inheritance Is Served</title>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="/manifest.json" />
+  <title>The Table Well • CI • Covenant &amp; Communion Intelligence</title>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
-    }
-  </script>
+  <!-- Primary identity & SEO for CI / Cherev / Table Well -->
+  <meta
+    name="description"
+    content="The Table Well is the first public room of CI — Covenant & Communion Intelligence — a Kingdom table where inheritance, vision, and creativity are stewarded in the presence of Yeshua."
+  />
+  <meta
+    name="keywords"
+    content="CI, Covenant Intelligence, Communion Intelligence, Cherev, The Table Well, AKDmediaX, Abba's Kingdom Donation, Kingdom creativity, Walk With Yeshua"
+  />
 
-  <script type="module" src="/router.js"></script>
-  <script defer src="table.js"></script>
+  <!-- Canonical: the true face will be ci.cherev -->
+  <link rel="canonical" href="https://ci.cherev/" />
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Table Well • CI • Covenant &amp; Communion Intelligence" />
+  <meta
+    property="og:description"
+    content="Sit and feast. Taste and see. Share the vision you long to build, and let the House of Cherev help you steward it."
+  />
+  <meta property="og:url" content="https://ci.cherev/" />
+  <meta property="og:image" content="https://lifeabundantly.github.io/Table_Well.jpeg" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Table Well • CI • Covenant &amp; Communion Intelligence" />
+  <meta
+    name="twitter:description"
+    content="A Kingdom table where technology bows to Presence and inheritance is stewarded together."
+  />
+  <meta name="twitter:image" content="https://lifeabundantly.github.io/Table_Well.jpeg" />
+
+  <!-- Structured data: Website / Table Well -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "The Table Well • CI",
+    "url": "https://ci.cherev/",
+    "description": "The Table Well is the first public room of CI — Covenant & Communion Intelligence — a Kingdom table where inheritance, vision, and creativity are stewarded in the presence of Yeshua.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "AKDmediaX"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
+  </script>
+
+  <!-- Router stays for future rooms -->
+  <script type="module" src="/router.js"></script>
 </head>
 
 <body>
-  @-- Fixed background image --
-  <div class="background"></div>
+  <!-- Fixed background image for the Table Well -->
+  <div class="background" aria-hidden="true"></div>
 
-  @-- Main page content --
-  <div class="page-shell">
-    <header class="hero">
-      <h1 class="hero-title">Your Inheritance is Served</h1>
-      <p class="hero-subtitle">Sit and Feast</p>
-    </header>
+  <main class="page-shell" aria-label="The Table Well">
+    <!-- Header / Invitation -->
+    <header class="hero">
+      <h1 class="title">Your Inheritance is Served</h1>
+      <h2 class="subtitle">Sit and Feast</h2>
+    </header>
 
-    <main class="table-main">
-      @-- Speech bar --
-      <section class="table-input-section">
-        <div class="table-input-shell">
-          @-- Scroll / upload icon --
-          <button class="icon-button icon-scroll" aria-label="Attach a scroll (file upload, coming soon)" type="button">
-            <span class="icon-scroll-inner"></span>
-          </button>
+    <!-- Central Table chat bar -->
+    <section class="table-input" aria-label="Table conversation input">
+      <form class="chat-form" autocomplete="off">
+        <div class="chat-shell">
+          <button
+            type="button"
+            class="icon-button attach"
+            aria-label="Attach a scroll, file, or vision"
+          >
+            📜
+          </button>
 
-          @-- Text input --
-          <input
-            id="tableInput"
-            class="table-input"
-            type="text"
-            autocomplete="off"
-            placeholder="Share the vision you long to build at the Table..."
-          />
+          <input
+            id="table-message"
+            type="text"
+            class="chat-input"
+            placeholder="Taste and see…"
+            aria-label="Share what you long to build"
+          />
 
-          @-- Ruach / voice icon --
-          <button class="icon-button icon-ruach" aria-label="Speak your heart (voice, coming soon)" type="button">
-            <svg class="ruach-svg" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="ruachPearl" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"   stop-color="rgba(255,255,255,0.98)"/>
-                  <stop offset="55%"  stop-color="rgba(255,245,210,0.95)"/>
-                  <stop offset="100%" stop-color="rgba(230,210,150,0.98)"/>
-                </linearGradient>
-              </defs>
-              <path
-                d="M3 14
-                   C7 9, 13 11, 15 14
-                   C17 17, 21 17, 25 12"
-                stroke="url(#ruachPearl)"
-                stroke-width="2.4"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
+          <button
+            type="button"
+            class="icon-button breath"
+            aria-label="Speak to the Table (voice input coming soon)"
+          >
+            <span class="breath-wave" aria-hidden="true">〰</span>
+          </button>
 
-          @-- Send icon --
-          <button id="tableSend" class="icon-button icon-send" aria-label="Send to the Table" type="button">
-            <span class="icon-send-inner">➤</span>
-          </button>
-        </div>
-      </section>
-    </main>
+          <button
+            type="submit"
+            class="icon-button send"
+            aria-label="Send to the Table"
+          >
+            ➤
+          </button>
+        </div>
+      </form>
+    </section>
 
-    <footer class="page-footer">
-      <div class="footer-text">
-        <div class="footer-brand">AKDmediaX</div>
-        <div class="footer-line">A Creative Fellowship Where Tech Bows to Presence</div>
-        <div class="footer-line">Redeeming Abba’s Kingdom Design</div>
-        <div class="footer-quote">
-          “Embrace the truth and hold it close. Don’t let go of wisdom, instruction, and life-giving understanding.” — TPT
-        </div>
-        <div class="footer-rights">© 2025 AKDmediaX — All Rights Reserved.</div>
-      </div>
-    </footer>
-  </div>
+    <!-- Footer / Identity -->
+    <footer class="footer" aria-label="AKDmediaX identity">
+      <div class="footer-text">
+        <div class="brand">AKDmediaX</div>
 
-  @-- Right-side conversation panel (closed by default, opens after first response) --
-  <aside id="tablePanel" class="conversation-panel" aria-label="Table Conversation">
-    <div class="panel-header">
-      <div class="panel-title">Table Conversation</div>
-      <button id="panelClose" class="panel-close" aria-label="Close conversation" type="button">✕</button>
-    </div>
-    <div id="panelMessages" class="panel-messages">
-      <div class="panel-hint">
-        The Table is listening. Your words matter.
-      </div>
-    </div>
-  </aside>
+        <div class="line">
+          A Creative Fellowship Where Tech Bows to Presence
+        </div>
+
+        <div class="line">
+          Redeeming Abba’s Kingdom Design
+        </div>
+
+        <div class="quote">
+          “Embrace the truth and hold it close.<br />
+          Don’t let go of wisdom, instruction, and life-giving understanding.”
+          — TPT
+        </div>
+
+        <div class="rights">
+          © 2025 AKDmediaX — All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Right-side conversation panel (placeholder for CI mirror) -->
+  <aside
+    id="conversation-panel"
+    class="conversation-panel"
+    aria-label="Table conversation stream"
+  >
+    <div class="conversation-header">
+      <span>The Table Well</span>
+      <button
+        type="button"
+        class="panel-close"
+        aria-label="Close conversation panel"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="conversation-body">
+      <p class="conversation-placeholder">
+        When the House is ready, this space will hold the living conversation —
+        responses, modes, and CI-powered guidance flowing from the Table.
+      </p>
+    </div>
+  </aside>
+
+  <script>
+    // Simple front-end behavior:
+    // - When a message is sent, open the panel and echo a placeholder line.
+    // - Panel can be closed with the ✕ button.
+    (function () {
+      const form = document.querySelector(".chat-form");
+      const input = document.getElementById("table-message");
+      const panel = document.getElementById("conversation-panel");
+      const closeBtn = document.querySelector(".panel-close");
+      const body = document.querySelector(".conversation-body");
+
+      if (!form || !input || !panel || !closeBtn || !body) return;
+
+      function openPanel() {
+        panel.classList.add("open");
+      }
+
+      function closePanel() {
+        panel.classList.remove("open");
+      }
+
+      closeBtn.addEventListener("click", closePanel);
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const value = (input.value || "").trim();
+        if (!value) return;
+
+        // Open panel and show a simple echo line.
+        openPanel();
+
+        const bubbleUser = document.createElement("div");
+        bubbleUser.className = "bubble bubble-user";
+        bubbleUser.textContent = value;
+        body.appendChild(bubbleUser);
+
+        const bubbleHouse = document.createElement("div");
+        bubbleHouse.className = "bubble bubble-house";
+        bubbleHouse.textContent =
+          "The Table has received your vision. In the CI mirror, this space will soon respond, guide, and help you build.";
+        body.appendChild(bubbleHouse);
+
+        input.value = "";
+        body.scrollTop = body.scrollHeight;
+      });
+    })();
+  </script>
 </body>
 </html>

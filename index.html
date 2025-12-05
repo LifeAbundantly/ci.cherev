@@ -1,109 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Table Well • Your Inheritance Is Served</title>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>The Table Well • Your Inheritance Is Served</title>
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="/manifest.json" />
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
-    }
-  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
+  </script>
 
-  <script type="module" src="/router.js"></script>
-  <script defer src="table.js"></script>
+  <script type="module" src="/router.js"></script>
 </head>
 
 <body>
-  <!-- Fixed background image -->
-  <div class="background"></div>
+  <!-- Fixed background image -->
+  <div class="background"></div>
 
-  <!-- Main page content -->
-  <div class="page-shell">
-    <header class="hero">
-      <h1 class="hero-title">Your Inheritance is Served</h1>
-      <p class="hero-subtitle">Sit and Feast</p>
-    </header>
+  <!-- Main page shell -->
+  <div class="page-shell">
+    <!-- Center title + subtitle -->
+    <header class="center-container">
+      <div class="center-text">
+        <div class="title">Your Inheritance is Served</div>
+        <div class="subtitle">Sit and Feast</div>
+      </div>
+    </header>
 
-    <main class="table-main">
-      <!-- Speech bar -->
-      <section class="table-input-section">
-        <div class="table-input-shell">
-          <!-- Scroll / upload icon -->
-          <button class="icon-button icon-scroll" aria-label="Attach a scroll (file upload, coming soon)" type="button">
-            <span class="icon-scroll-inner"></span>
-          </button>
+    <!-- Chat / feast bar -->
+    <section class="chat-shell">
+      <form class="chat-bar" aria-label="Table conversation input">
+        <button
+          type="button"
+          class="icon-scroll"
+          aria-label="Attach a scroll or file"
+        >
+          📜
+        </button>
 
-          <!-- Text input -->
-          <input
-            id="tableInput"
-            class="table-input"
-            type="text"
-            autocomplete="off"
-            placeholder="Share the vision you long to build at the Table..."
-          />
+        <input
+          type="text"
+          class="chat-input"
+          placeholder="Taste and see"
+          aria-label="Share your heart and your dream"
+        />
 
-          <!-- Ruach / voice icon -->
-          <button class="icon-button icon-ruach" aria-label="Speak your heart (voice, coming soon)" type="button">
-            <svg class="ruach-svg" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="ruachPearl" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"   stop-color="rgba(255,255,255,0.98)"/>
-                  <stop offset="55%"  stop-color="rgba(255,245,210,0.95)"/>
-                  <stop offset="100%" stop-color="rgba(230,210,150,0.98)"/>
-                </linearGradient>
-              </defs>
-              <path
-                d="M3 14
-                   C7 9, 13 11, 15 14
-                   C17 17, 21 17, 25 12"
-                stroke="url(#ruachPearl)"
-                stroke-width="2.4"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
+        <button
+          type="button"
+          class="icon-breath"
+          aria-label="Speak with your voice"
+        >
+          <span class="breath-wave">≈≈≈</span>
+        </button>
+      </form>
+    </section>
 
-          <!-- Send icon -->
-          <button id="tableSend" class="icon-button icon-send" aria-label="Send to the Table" type="button">
-            <span class="icon-send-inner">➤</span>
-          </button>
-        </div>
-      </section>
-    </main>
+    <!-- Footer -->
+    <footer class="footer-container">
+      <div class="footer-text">
+        <div class="brand">AKDmediaX</div>
 
-    <footer class="page-footer">
-      <div class="footer-text">
-        <div class="footer-brand">AKDmediaX</div>
-        <div class="footer-line">A Creative Fellowship Where Tech Bows to Presence</div>
-        <div class="footer-line">Redeeming Abba’s Kingdom Design</div>
-        <div class="footer-quote">
-          “Embrace the truth and hold it close. Don’t let go of wisdom, instruction, and life-giving understanding.” — TPT
-        </div>
-        <div class="footer-rights">© 2025 AKDmediaX — All Rights Reserved.</div>
-      </div>
-    </footer>
-  </div>
+        <div class="line">
+          A Creative Fellowship Where Tech Bows to Presence
+        </div>
 
-  <!-- Right-side conversation panel (closed by default, opens after first response) -->
-  <aside id="tablePanel" class="conversation-panel" aria-label="Table Conversation">
-    <div class="panel-header">
-      <div class="panel-title">Table Conversation</div>
-      <button id="panelClose" class="panel-close" aria-label="Close conversation" type="button">
-        ✕
-      </button>
-    </div>
-    <div id="panelMessages" class="panel-messages">
-      <div class="panel-hint">
-        The Table is listening. Your words matter.
-      </div>
-    </div>
-  </aside>
+        <div class="line">
+          Redeeming Abba’s Kingdom Design
+        </div>
+
+        <div class="quote">
+          “Embrace the truth and hold it close.<br />
+          Don’t let go of wisdom, instruction, and life-giving understanding.”
+          — TPT
+        </div>
+
+        <div class="rights">
+          © 2025 AKDmediaX — All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Right-side chat drawer toggle (closed by default) -->
+  <button
+    class="chat-drawer-toggle"
+    aria-label="Open table conversation history"
+  >
+    Conversation
+  </button>
+
+  <!-- Right-side chat drawer (content to be wired later) -->
+  <aside class="chat-drawer" aria-label="Conversation panel">
+    <div class="chat-drawer-header">
+      <span class="chat-drawer-title">The Table Well</span>
+      <button
+        class="chat-drawer-close"
+        type="button"
+        aria-label="Close conversation panel"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="chat-drawer-body">
+      <!-- Future: streamed messages, modes, logs, etc. -->
+      <p class="chat-drawer-placeholder">
+        When the house is ready, this space will hold the living conversation —
+        responses, modes, and all the ways the Table walks with them.
+      </p>
+    </div>
+  </aside>
+
+  <!-- Minimal JS only for opening/closing the right chat drawer -->
+  <script>
+    (function () {
+      const toggle = document.querySelector(".chat-drawer-toggle");
+      const drawer = document.querySelector(".chat-drawer");
+      const closeBtn = document.querySelector(".chat-drawer-close");
+
+      if (toggle && drawer) {
+        toggle.addEventListener("click", () => {
+          drawer.classList.add("open");
+        });
+      }
+
+      if (closeBtn && drawer) {
+        closeBtn.addEventListener("click", () => {
+          drawer.classList.remove("open");
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

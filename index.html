@@ -1,79 +1,109 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Table Well • Your Inheritance Is Served</title>
+
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="/manifest.json" />  <script>
+  <link rel="manifest" href="/manifest.json" />
+
+  <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');
     }
-  </script>  <script type="module" src="/router.js"></script></head><body>
-  <div class="background"></div>  <div class="page-shell">
+  </script>
+
+  <script type="module" src="/router.js"></script>
+  <script defer src="table.js"></script>
+</head>
+
+<body>
+  <!-- Fixed background image -->
+  <div class="background"></div>
+
+  <!-- Main page content -->
+  <div class="page-shell">
     <header class="hero">
       <h1 class="hero-title">Your Inheritance is Served</h1>
       <p class="hero-subtitle">Sit and Feast</p>
-    </header><section class="chat-section">
-  <form id="table-form" class="chat-form">
-    <div class="chat-input-shell">
-      <button
-        type="button"
-        class="icon-btn"
-        aria-label="Attach a gift or file to the Table"
-      >
-        📎
-      </button>
+    </header>
 
-      <input
-        id="table-input"
-        class="chat-input"
-        type="text"
-        autocomplete="off"
-        placeholder="Share the vision you long to build at the Table…"
-      />
+    <main class="table-main">
+      <!-- Speech bar -->
+      <section class="table-input-section">
+        <div class="table-input-shell">
+          <!-- Scroll / upload icon -->
+          <button class="icon-button icon-scroll" aria-label="Attach a scroll (file upload, coming soon)" type="button">
+            <span class="icon-scroll-inner"></span>
+          </button>
 
-      <button
-        type="button"
-        class="icon-btn"
-        aria-label="Speak to the Table"
-      >
-        🎙
-      </button>
+          <!-- Text input -->
+          <input
+            id="tableInput"
+            class="table-input"
+            type="text"
+            autocomplete="off"
+            placeholder="Share the vision you long to build at the Table..."
+          />
 
-      <button
-        type="submit"
-        class="icon-btn send-btn"
-        aria-label="Send your words to the Table"
-      >
-        ➤
-      </button>
-    </div>
-  </form>
-</section>
+          <!-- Ruach / voice icon -->
+          <button class="icon-button icon-ruach" aria-label="Speak your heart (voice, coming soon)" type="button">
+            <svg class="ruach-svg" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="ruachPearl" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="rgba(255,255,255,0.98)"/>
+                  <stop offset="55%"  stop-color="rgba(255,245,210,0.95)"/>
+                  <stop offset="100%" stop-color="rgba(230,210,150,0.98)"/>
+                </linearGradient>
+              </defs>
+              <path
+                d="M3 14
+                   C7 9, 13 11, 15 14
+                   C17 17, 21 17, 25 12"
+                stroke="url(#ruachPearl)"
+                stroke-width="2.4"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
 
-<footer class="footer-container">
-  <div class="footer-text">
-    <div class="brand">AKDmediaX</div>
+          <!-- Send icon -->
+          <button id="tableSend" class="icon-button icon-send" aria-label="Send to the Table" type="button">
+            <span class="icon-send-inner">➤</span>
+          </button>
+        </div>
+      </section>
+    </main>
 
-    <div class="line">
-      A Creative Fellowship Where Tech Bows to Presence
-    </div>
-
-    <div class="line">
-      Redeeming Abba’s Kingdom Design
-    </div>
-
-    <div class="quote">
-      “Embrace the truth and hold it close.<br>
-      Don’t let go of wisdom, instruction, and life-giving understanding.” — TPT
-    </div>
-
-    <div class="rights">
-      © 2025 AKDmediaX — All Rights Reserved.
-    </div>
+    <footer class="page-footer">
+      <div class="footer-text">
+        <div class="footer-brand">AKDmediaX</div>
+        <div class="footer-line">A Creative Fellowship Where Tech Bows to Presence</div>
+        <div class="footer-line">Redeeming Abba’s Kingdom Design</div>
+        <div class="footer-quote">
+          “Embrace the truth and hold it close. Don’t let go of wisdom, instruction, and life-giving understanding.” — TPT
+        </div>
+        <div class="footer-rights">© 2025 AKDmediaX — All Rights Reserved.</div>
+      </div>
+    </footer>
   </div>
-</footer>
 
-  </div>
+  <!-- Right-side conversation panel (closed by default, opens after first response) -->
+  <aside id="tablePanel" class="conversation-panel" aria-label="Table Conversation">
+    <div class="panel-header">
+      <div class="panel-title">Table Conversation</div>
+      <button id="panelClose" class="panel-close" aria-label="Close conversation" type="button">
+        ✕
+      </button>
+    </div>
+    <div id="panelMessages" class="panel-messages">
+      <div class="panel-hint">
+        The Table is listening. Your words matter.
+      </div>
+    </div>
+  </aside>
 </body>
 </html>

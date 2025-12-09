@@ -1,1 +1,25 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="mirror.js"></script></head><body></body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      // GitHub Pages SPA fallback:
+      // Any unknown path should quietly bounce back to the main index,
+      // preserving the search query (?ci.cherev, etc.) so the mirror flag still works.
+      (function () {
+        var loc = window.location;
+        // Preserve query string and hash
+        var search = loc.search || "";
+        var hash = loc.hash || "";
+        // Redirect to the root of the Table_Well site
+        var target = loc.protocol + "//" + loc.host + "/Table_Well/" + search + hash;
+        window.location.replace(target);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting…</p>
+  </body>
+</html>

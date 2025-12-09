@@ -24,7 +24,7 @@
 
   <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="The Table Well • CI • Covenant &amp; Communion Intelligence" />
+  <meta property="og:title" content="The Table Well • CI • Covenant & Communion Intelligence" />
   <meta
     property="og:description"
     content="Sit and feast. Taste and see. Share the vision you long to build, and let the House of Cherev help you steward it."
@@ -34,7 +34,7 @@
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="The Table Well • CI • Covenant &amp; Communion Intelligence" />
+  <meta name="twitter:title" content="The Table Well • CI • Covenant & Communion Intelligence" />
   <meta
     name="twitter:description"
     content="A Kingdom table where technology bows to Presence and inheritance is stewarded together."
@@ -56,15 +56,29 @@
   }
   </script>
 
+  <!-- Main styles (unchanged) -->
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="/manifest.json" />
 
+  <!-- PWA manifest: now relative to /Table_Well/ -->
+  <link rel="manifest" href="manifest.webmanifest" />
+
+  <!-- Theme color to match manifest -->
+  <meta name="theme-color" content="#0fdfd1" />
+
+  <!-- Service Worker registration for CI Mirror Engine -->
   <script>
+    // Register the CI Mirror service worker AFTER load,
+    // scoped to /Table_Well/ via relative path.
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js");
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .catch(function (err) {
+            console.error("CI Mirror SW registration failed:", err);
+          });
+      });
     }
   </script>
-
 </head>
 
 <body>
@@ -215,6 +229,8 @@
       });
     })();
   </script>
+
+  <!-- CI mirror flag: keep as-is, just read-only detection -->
   <script>
     (function () {
       try {

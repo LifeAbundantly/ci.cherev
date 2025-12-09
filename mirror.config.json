@@ -1,0 +1,4 @@
+{
+  "routeAll": true,
+  "entry": "/mirror/ci-router.js"
+}

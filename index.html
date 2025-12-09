@@ -258,5 +258,70 @@
       }
     })();
   </script>
+
+  <script>
+    // CI.CHEREV Mirror PWA Install Helper
+    // - Listens for the browser's beforeinstallprompt event
+    // - Shows a small "Install CI.CHEREV" button
+    // - When tapped, triggers the native PWA install prompt
+
+    (function () {
+      if (!("serviceWorker" in navigator)) return;
+
+      let deferredPrompt = null;
+      let installButton = null;
+
+      window.addEventListener("beforeinstallprompt", function (e) {
+        // Stop the browser from showing its own mini-infobar
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // If we already created a button, don't create another
+        if (installButton) return;
+
+        installButton = document.createElement("button");
+        installButton.textContent = "Install CI.CHEREV";
+        installButton.setAttribute(
+          "aria-label",
+          "Install the CI.CHEREV Mirror app for The Table Well"
+        );
+
+        // Inline styling so we don't have to touch style.css
+        installButton.style.position = "fixed";
+        installButton.style.right = "1rem";
+        installButton.style.bottom = "1rem";
+        installButton.style.zIndex = "9999";
+        installButton.style.padding = "0.6rem 1rem";
+        installButton.style.borderRadius = "999px";
+        installButton.style.border = "none";
+        installButton.style.fontSize = "0.9rem";
+        installButton.style.fontFamily = "inherit";
+        installButton.style.cursor = "pointer";
+        installButton.style.background = "rgba(15, 223, 209, 0.95)";
+        installButton.style.color = "#000";
+        installButton.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
+
+        document.body.appendChild(installButton);
+
+        installButton.addEventListener("click", async function () {
+          if (!deferredPrompt) return;
+
+          try {
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+          } catch (err) {
+            console.error("CI.CHEREV install prompt error:", err);
+          }
+
+          // Clean up: only offer once per session
+          deferredPrompt = null;
+          if (installButton && installButton.parentNode) {
+            installButton.parentNode.removeChild(installButton);
+          }
+          installButton = null;
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

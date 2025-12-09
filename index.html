@@ -65,8 +65,6 @@
     }
   </script>
 
-  <!-- Router stays for future rooms -->
-  <script type="module" src="/router.js"></script>
 </head>
 
 <body>
@@ -170,7 +168,6 @@
     </div>
   </aside>
 
-  <script src="mirror.js"></script>
   <script>
     // Simple front-end behavior:
     // - When a message is sent, open the panel and echo a placeholder line.
@@ -221,40 +218,27 @@
   <script>
     (function () {
       try {
-        // Read the full query string, e.g. "?ci.cherev" or "?ci.trev"
-        var search = window.location.search || "";
+        const url = new URL(window.location.href);
 
-        // Detect any known mirror flags
-        var isCiCherev =
-          search.indexOf("ci.cherev") !== -1 ||
-          search.indexOf("ci=cherev") !== -1 ||
-          search.indexOf("ci.trev") !== -1;
+        // LOGICAL MIRROR FLAG ONLY
+        // If the URL contains ?ci.cherev in ANY of these forms,
+        // we treat it as "this page is being visited through the CI mirror".
+        const hasCiParam =
+          url.search === "?ci.cherev" ||
+          url.searchParams.has("ci.cherev") ||
+          url.searchParams.get("ci") === "cherev";
 
-        // If this is not a mirror URL, do nothing and let the page behave normally
-        if (!isCiCherev) {
-          return;
-        }
+        // Expose this as a simple global flag the rest of the page can read
+        // without EVER changing the URL.
+        window.__CI_CHEREV_MIRROR__ = !!hasCiParam;
 
-        // Normalize the URL in the bar so it always shows ?ci.cherev
-        var baseUrl = window.location.origin + window.location.pathname;
-        var normalizedUrl = baseUrl + "?ci.cherev";
-
-        if (window.location.href !== normalizedUrl) {
-          window.history.replaceState({}, "", normalizedUrl);
-        }
-
-        // Optional: adjust the document title for your own sanity when you see it
-        if (document && document.title && document.title.indexOf("ci.cherev") === -1) {
-          document.title = "ci.cherev · " + document.title;
-        }
-
-        // At this point, the mirror is "active". The rest of the page content is unchanged;
-        // only the URL and title reflect that we are in the ci.cherev mirror context.
-        // Any future mirror-specific behavior can read this flag:
-        window.__CI_CHEREV_ACTIVE__ = true;
-      } catch (err) {
-        // Fail silently; never break the page if the mirror handler has an issue.
-        console && console.warn && console.warn("ci.cherev mirror script error:", err);
+        // IMPORTANT:
+        // Do NOT call history.pushState or history.replaceState here.
+        // Do NOT modify window.location.
+        // We keep the URL EXACTLY as the browser gave it to us.
+      } catch (e) {
+        // Fail silent – mirror flag is optional, not critical.
+        window.__CI_CHEREV_MIRROR__ = false;
       }
     })();
   </script>

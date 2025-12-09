@@ -5,16 +5,23 @@
     <title>Redirecting…</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
-      // GitHub Pages SPA fallback:
-      // Any unknown path should quietly bounce back to the main index,
-      // preserving the search query (?ci.cherev, etc.) so the mirror flag still works.
       (function () {
         var loc = window.location;
-        // Preserve query string and hash
+
+        // Preserve whatever query string and hash we came in with.
         var search = loc.search || "";
         var hash = loc.hash || "";
-        // Redirect to the root of the Table_Well site
-        var target = loc.protocol + "//" + loc.host + "/Table_Well/" + search + hash;
+
+        // When the site is served as a GitHub project page, the
+        // canonical base is /Table_Well/.
+        // When it is served on the custom domain ci.cherev,
+        // the canonical base is just "/".
+        var basePath = "/Table_Well/";
+        if (loc.hostname === "ci.cherev") {
+          basePath = "/";
+        }
+
+        var target = loc.protocol + "//" + loc.host + basePath + search + hash;
         window.location.replace(target);
       })();
     </script>

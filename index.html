@@ -218,5 +218,46 @@
       });
     })();
   </script>
+  <script>
+    (function () {
+      try {
+        var url = new URL(window.location.href);
+        // We treat ANY query key as a possible mirror key, but we are specifically looking for "ci.cherev"
+        var firstParamKey = null;
+        if (url.searchParams && url.searchParams.keys) {
+          var iterator = url.searchParams.keys();
+          var result = iterator.next();
+          if (!result.done) {
+            firstParamKey = result.value;
+          }
+        } else if (url.search && url.search.length > 1) {
+          // Fallback for older browsers: manually parse ?ci.cherev style keys without values
+          var raw = url.search.substring(1); // remove '?'
+          if (raw.indexOf('=') === -1) {
+            firstParamKey = raw;
+          }
+        }
+
+        // Normalize and check for ci.cherev
+        if (firstParamKey && firstParamKey.toLowerCase() === 'ci.cherev') {
+          // Mark the document as being in mirror mode.
+          // This does NOT change the visible page; it just tags it for future behavior if we want it.
+          document.documentElement.setAttribute('data-mirror', 'ci.cherev');
+
+          // Optional: update the page title to reflect mirror mode without changing Cody's base title structure.
+          if (!document.title.toLowerCase().includes('ci.cherev')) {
+            document.title = 'ci.cherev | ' + document.title;
+          }
+
+          // IMPORTANT: We do NOT redirect or change the path here.
+          // The canonical mirror entry we rely on is:
+          // https://lifeabundantly.github.io/Table_Well/?ci.cherev
+          // This keeps GitHub Pages happy and the app stable.
+        }
+      } catch (e) {
+        console.error('Mirror detection error:', e);
+      }
+    })();
+  </script>
 </body>
 </html>

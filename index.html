@@ -221,41 +221,40 @@
   <script>
     (function () {
       try {
-        var url = new URL(window.location.href);
-        // We treat ANY query key as a possible mirror key, but we are specifically looking for "ci.cherev"
-        var firstParamKey = null;
-        if (url.searchParams && url.searchParams.keys) {
-          var iterator = url.searchParams.keys();
-          var result = iterator.next();
-          if (!result.done) {
-            firstParamKey = result.value;
-          }
-        } else if (url.search && url.search.length > 1) {
-          // Fallback for older browsers: manually parse ?ci.cherev style keys without values
-          var raw = url.search.substring(1); // remove '?'
-          if (raw.indexOf('=') === -1) {
-            firstParamKey = raw;
-          }
+        // Read the full query string, e.g. "?ci.cherev" or "?ci.trev"
+        var search = window.location.search || "";
+
+        // Detect any known mirror flags
+        var isCiCherev =
+          search.indexOf("ci.cherev") !== -1 ||
+          search.indexOf("ci=cherev") !== -1 ||
+          search.indexOf("ci.trev") !== -1;
+
+        // If this is not a mirror URL, do nothing and let the page behave normally
+        if (!isCiCherev) {
+          return;
         }
 
-        // Normalize and check for ci.cherev
-        if (firstParamKey && firstParamKey.toLowerCase() === 'ci.cherev') {
-          // Mark the document as being in mirror mode.
-          // This does NOT change the visible page; it just tags it for future behavior if we want it.
-          document.documentElement.setAttribute('data-mirror', 'ci.cherev');
+        // Normalize the URL in the bar so it always shows ?ci.cherev
+        var baseUrl = window.location.origin + window.location.pathname;
+        var normalizedUrl = baseUrl + "?ci.cherev";
 
-          // Optional: update the page title to reflect mirror mode without changing Cody's base title structure.
-          if (!document.title.toLowerCase().includes('ci.cherev')) {
-            document.title = 'ci.cherev | ' + document.title;
-          }
-
-          // IMPORTANT: We do NOT redirect or change the path here.
-          // The canonical mirror entry we rely on is:
-          // https://lifeabundantly.github.io/Table_Well/?ci.cherev
-          // This keeps GitHub Pages happy and the app stable.
+        if (window.location.href !== normalizedUrl) {
+          window.history.replaceState({}, "", normalizedUrl);
         }
-      } catch (e) {
-        console.error('Mirror detection error:', e);
+
+        // Optional: adjust the document title for your own sanity when you see it
+        if (document && document.title && document.title.indexOf("ci.cherev") === -1) {
+          document.title = "ci.cherev · " + document.title;
+        }
+
+        // At this point, the mirror is "active". The rest of the page content is unchanged;
+        // only the URL and title reflect that we are in the ci.cherev mirror context.
+        // Any future mirror-specific behavior can read this flag:
+        window.__CI_CHEREV_ACTIVE__ = true;
+      } catch (err) {
+        // Fail silently; never break the page if the mirror handler has an issue.
+        console && console.warn && console.warn("ci.cherev mirror script error:", err);
       }
     })();
   </script>

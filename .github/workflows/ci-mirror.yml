@@ -22,7 +22,7 @@ jobs:
 
       - name: Build mirror artifact
         run: |
-          build_dir="_site"
+          build_dir="mirror_build"
           rm -rf "$build_dir"
           mkdir -p "$build_dir/Table_Well"
           rsync -av --exclude '.git' --exclude '.github' --exclude "${build_dir}" --exclude 'mirror' ./ "$build_dir/Table_Well/"
@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: _site
+          path: mirror_build
           if-no-files-found: error
           retention-days: 1
 
@@ -58,4 +58,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          path: _site
+          path: mirror_build

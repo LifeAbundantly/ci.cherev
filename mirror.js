@@ -1,8 +1,7 @@
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  const ciActivationPath = '/ci.html';
-
-  if (params.has('ci.cherev') || window.location.pathname.includes('/ci')) {
-    window.location.replace(ciActivationPath);
-  }
+(function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('ci.cherev')) {
+        // KEEP the user on the same hosted domain root
+        window.location.replace('/?ci=on');
+    }
 })();

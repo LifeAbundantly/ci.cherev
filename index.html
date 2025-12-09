@@ -218,26 +218,26 @@
   <script>
     (function () {
       try {
-        const url = new URL(window.location.href);
+        var loc = window.location;
+        var url = new URL(loc.href);
 
-        // LOGICAL MIRROR FLAG ONLY
-        // If the URL contains ?ci.cherev in ANY of these forms,
-        // we treat it as "this page is being visited through the CI mirror".
-        const hasCiParam =
+        // We consider this a CI mirror visit if:
+        //  - the URL has ?ci.cherev exactly, OR
+        //  - there is a "ci.cherev" query key/value present, OR
+        //  - there is a query param "ci=cherev", OR
+        //  - the host itself is ci.cherev (custom domain case).
+        var hasCiParam =
           url.search === "?ci.cherev" ||
           url.searchParams.has("ci.cherev") ||
           url.searchParams.get("ci") === "cherev";
 
-        // Expose this as a simple global flag the rest of the page can read
-        // without EVER changing the URL.
-        window.__CI_CHEREV_MIRROR__ = !!hasCiParam;
+        var isCiHost = loc.hostname === "ci.cherev";
 
-        // IMPORTANT:
-        // Do NOT call history.pushState or history.replaceState here.
-        // Do NOT modify window.location.
-        // We keep the URL EXACTLY as the browser gave it to us.
+        // Expose a single, stable flag the rest of the page can read.
+        // This NEVER mutates the URL.
+        window.__CI_CHEREV_MIRROR__ = !!(hasCiParam || isCiHost);
       } catch (e) {
-        // Fail silent – mirror flag is optional, not critical.
+        // If anything goes wrong, fail safely.
         window.__CI_CHEREV_MIRROR__ = false;
       }
     })();

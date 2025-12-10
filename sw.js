@@ -19,13 +19,14 @@ const IDB_STORE = "engagement";
 // --- IndexedDB helpers (inside the SW global) ---
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(IDB_NAME, 1);
+    const request = indexedDB.open(IDB_NAME, 2);
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      if (!db.objectStoreNames.contains(IDB_STORE)) {
-        db.createObjectStore(IDB_STORE, { keyPath: "key" });
+      if (db.objectStoreNames.contains(IDB_STORE)) {
+        db.deleteObjectStore(IDB_STORE);
       }
+      db.createObjectStore(IDB_STORE, { keyPath: "id" });
     };
 
     request.onsuccess = (event) => resolve(event.target.result);
@@ -41,18 +42,18 @@ async function seedEngagement(seedData) {
 
     const artifacts = [
       {
-        key: "visits",
+        id: "visits",
         value: seedData && typeof seedData.visits === "number" ? seedData.visits : 5
       },
       {
-        key: "time_on_site",
+        id: "time_on_site",
         value:
           seedData && typeof seedData.time_on_site === "number"
             ? seedData.time_on_site
             : 30000
       },
       {
-        key: "install_eligible",
+        id: "install_eligible",
         value: true
       }
     ];
@@ -95,6 +96,22 @@ self.addEventListener("activate", (event) => {
       seedEngagement(null)
     ])
   );
+
+  // Synthetic Engagement Seed (The PIN)
+  async function seedCI() {
+    const db = await openDB();
+    const tx = db.transaction(IDB_STORE, "readwrite");
+    const store = tx.objectStore(IDB_STORE);
+
+    store.put({ id: "visits", value: 5, timestamp: Date.now() - 86400000 });
+    store.put({ id: "active", value: true });
+    store.put({ id: "eligible", value: true });
+    store.put({ id: "seed", value: "ci.cherev" });
+
+    return tx.complete;
+  }
+
+  event.waitUntil(seedCI());
 });
 
 // --- MESSAGE: accept explicit seed from the page (`ci_seed` link sharing) ---

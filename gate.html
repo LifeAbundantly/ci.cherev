@@ -80,7 +80,10 @@
 
       // Installation hint for browser
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
+        navigator.serviceWorker.register('/sw.js').catch(() => {
+          // Fallback for GitHub Pages project path if needed
+          return navigator.serviceWorker.register('./sw.js');
+        });
       }
 
       // Move into synthetic CI Identity

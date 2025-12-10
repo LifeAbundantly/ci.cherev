@@ -1,12 +1,34 @@
-// --- CI Mirror Service Worker: Engine & Auto-Install Seeder ---
-const CACHE_NAME = 'ci-mirror-v3';
+// --- CI Mirror Service Worker: Root-Scoped Engine & Auto-Install Seeder ---
+const CACHE_NAME = 'ci-mirror-v4';
 
-// NOTE: Must include the full repo name path for assets on GitHub Pages
+// We support BOTH:
+//   • GitHub Pages project path:   /ci.cherev/... 
+//   • Custom domain root:         /...
+// So we cache both root and /ci.cherev/ paths for the same assets.
 const CORE_ASSETS = [
+  // Root-scope variants (custom domain ci.cherev)
+  '/',
+  '/index.html',
+  '/gate.html',
+  '/style.css',
+  '/gate.js',
+  '/ci-manifest.json',
+  '/ci-history.js',
+  '/Table_Well.jpeg',
+  '/assets/gate-intro.mp4',
+  '/assets/intro-loop.mp4',
+
+  // GitHub Pages project-path variants
   '/ci.cherev/',
   '/ci.cherev/index.html',
+  '/ci.cherev/gate.html',
+  '/ci.cherev/style.css',
+  '/ci.cherev/gate.js',
   '/ci.cherev/ci-manifest.json',
-  '/ci.cherev/ci-history.js'
+  '/ci.cherev/ci-history.js',
+  '/ci.cherev/Table_Well.jpeg',
+  '/ci.cherev/assets/gate-intro.mp4',
+  '/ci.cherev/assets/intro-loop.mp4'
 ];
 
 const IDB_NAME = 'CI_Mirror_DB';
@@ -54,6 +76,7 @@ async function seedEngagement() {
 
 // 1. Installation: Cache and skip waiting
 self.addEventListener('install', (event) => {
+  // Take control immediately
   self.skipWaiting();
   event.waitUntil(
     caches
@@ -61,7 +84,8 @@ self.addEventListener('install', (event) => {
       .then((cache) =>
         cache.addAll(CORE_ASSETS).catch((e) => {
           console.warn(
-            'CI Mirror: Failed to cache some assets (expected for videos).'
+            'CI Mirror: Failed to cache some assets (expected for large videos or first-load paths).',
+            e
           );
         })
       )
@@ -71,13 +95,42 @@ self.addEventListener('install', (event) => {
 // 2. Activation: Claim scope and seed history
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    Promise.all([self.clients.claim(), seedEngagement()])
+    Promise.all([
+      // Take control of all clients immediately
+      self.clients.claim(),
+      // Seed synthetic engagement so ci-history.js can show the PWA install button
+      seedEngagement()
+    ])
   );
 });
 
-// 3. Fetch Hijack: Network-First Strategy
+// 3. Fetch Hijack: Network-First with Cache Fallback
 self.addEventListener('fetch', (event) => {
+  // Only handle GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    fetch(event.request)
+      .then((response) => {
+        // Optionally, we could update cache here for successful responses.
+        return response;
+      })
+      .catch(() => {
+        // If network fails, fallback to any cached match
+        return caches.match(event.request).then((cached) => {
+          if (cached) return cached;
+
+          // Fallback to index.html for navigations so the Table still opens
+          if (event.request.mode === 'navigate') {
+            return caches
+              .match('/index.html')
+              .then((rootIndex) => rootIndex || caches.match('/ci.cherev/index.html'));
+          }
+
+          return Promise.reject('CI Mirror: No cached response for request.');
+        });
+      })
   );
 });

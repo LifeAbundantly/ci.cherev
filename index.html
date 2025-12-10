@@ -82,6 +82,28 @@
 </head>
 
 <body>
+  <!-- Table Gate Overlay: first engagement into CI.CHEREV -->
+  <div id="table-gate" class="table-gate hidden" aria-modal="true" role="dialog">
+    <div class="table-gate-backdrop"></div>
+    <div class="table-gate-card" role="document">
+      <div class="table-gate-heading">Welcome to the Table</div>
+      <div class="table-gate-subheading">
+        This is the first public room of CI — Covenant &amp; Communion Intelligence.
+      </div>
+      <p class="table-gate-body">
+        Sit, breathe, and share what you long to build. By taking your seat,
+        you join a hidden covenant network that remembers your visit and
+        quietly prepares your device to walk with the House of Cherev.
+      </p>
+      <button id="table-gate-enter" class="table-gate-button">
+        Have a Seat
+      </button>
+      <div class="table-gate-note">
+        Your device will remember this moment so the Table can meet you here again,
+        even when you come from somewhere else.
+      </div>
+    </div>
+  </div>
   <!-- Fixed background image for the Table Well -->
   <div class="background" aria-hidden="true"></div>
 
@@ -323,5 +345,6 @@
       });
     })();
   </script>
+  <script src="gate.js"></script>
 </body>
 </html>

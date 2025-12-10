@@ -310,3 +310,103 @@ html[data-ci-mirror="active"] body::before {
     font-size: 1.45rem;
   }
 }
+
+/* --- Table Gate Overlay (CI.CHEREV entry) ------------------------- */
+.table-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  font-family: inherit;
+}
+
+.table-gate.hidden {
+  display: none;
+}
+
+.table-gate-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(15, 223, 209, 0.25), transparent),
+              rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(8px);
+}
+
+.table-gate-card {
+  position: relative;
+  max-width: 480px;
+  width: 92%;
+  background: rgba(5, 10, 16, 0.96);
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem 1.75rem;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(15, 223, 209, 0.45);
+  color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.table-gate-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0fdfd1;
+}
+
+.table-gate-subheading {
+  font-size: 0.95rem;
+  color: #e5e7eb;
+  line-height: 1.4;
+}
+
+.table-gate-body {
+  font-size: 0.9rem;
+  color: #d1d5db;
+  line-height: 1.55;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.table-gate-button {
+  margin-top: 0.5rem;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #0fdfd1, #22c55e);
+  color: #020617;
+  cursor: pointer;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+              filter 0.12s ease-out;
+  box-shadow: 0 10px 25px rgba(15, 223, 209, 0.35);
+}
+
+.table-gate-button:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 6px 18px rgba(15, 223, 209, 0.3);
+  filter: brightness(0.96);
+}
+
+.table-gate-note {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+@media (min-width: 640px) {
+  .table-gate-card {
+    padding: 2rem 2rem 2rem;
+  }
+  .table-gate-heading {
+    font-size: 1.5rem;
+  }
+}

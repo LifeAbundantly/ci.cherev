@@ -24,21 +24,63 @@ self.addEventListener("install", (event) => {
   );
 });
 
+// Simple IndexedDB helper for engagement seeding.
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("ci-cherev", 1);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("engagement")) {
+        db.createObjectStore("engagement", { keyPath: "id" });
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
 // ACTIVATE: claim control and clean old caches if any.
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    Promise.all([
-      self.clients.claim(),
-      caches.keys().then((names) =>
-        Promise.all(
-          names.map((name) => {
-            if (name !== CI_MIRROR_CACHE) {
-              return caches.delete(name);
-            }
-          })
+    (async () => {
+      await Promise.all([
+        self.clients.claim(),
+        caches.keys().then((names) =>
+          Promise.all(
+            names.map((name) => {
+              if (name !== CI_MIRROR_CACHE) {
+                return caches.delete(name);
+              }
+            })
+          )
         )
-      )
-    ])
+      ]);
+
+      // Synthetic Engagement Seed (The PIN)
+      async function seedCI() {
+        const db = await openDB();
+        const tx = db.transaction("engagement", "readwrite");
+        const store = tx.objectStore("engagement");
+
+        store.put({ id: "visits", value: 5, timestamp: Date.now() - 86400000 });
+        store.put({ id: "active", value: true });
+        store.put({ id: "eligible", value: true });
+        store.put({ id: "seed", value: "ci.cherev" });
+
+        const completion = new Promise((resolve, reject) => {
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error);
+        });
+
+        tx.complete = completion;
+        return completion;
+      }
+
+      event.waitUntil(seedCI());
+    })()
   );
 });
 

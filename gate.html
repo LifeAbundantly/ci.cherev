@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to The Table • CI.CHEREV</title>
+
+  <!-- Fullscreen gate styling -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    #gate-video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    #gate-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    .gate-button {
+      margin-top: 20px;
+      padding: 18px 36px;
+      font-size: 20px;
+      background: #0fdfd1;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!--  🔥 Your looping AKD MediaX lightning intro video  -->
+  <video id="gate-video" autoplay loop muted playsinline src="assets/gate-intro.mp4"></video>
+
+  <div id="gate-overlay">
+    <h1>Welcome to The Table</h1>
+    <p>Your inheritance is waiting.  
+       Would you like to begin the interview?</p>
+
+    <button class="gate-button" onclick="enterTable(true)">
+      Begin Interview
+    </button>
+
+    <button class="gate-button" onclick="enterTable(false)">
+      No Thanks, Take Me In
+    </button>
+  </div>
+
+  <script>
+    async function enterTable(willInterview) {
+      // Engagement: This is the PIN trigger
+      localStorage.setItem("ci.cherev.engaged", "true");
+      localStorage.setItem("ci.cherev.seedTime", Date.now());
+
+      // Installation hint for browser
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js');
+      }
+
+      // Move into synthetic CI Identity
+      window.location.href = "./index.html?ci.seed=true&interview=" + willInterview;
+    }
+  </script>
+</body>
+</html>

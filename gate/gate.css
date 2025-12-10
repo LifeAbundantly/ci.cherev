@@ -1,128 +1,111 @@
-/* Full-screen overlay for initial gate (gate.html / #gate) and CI gate (#ci-gate) */
+/*
+ * Full-screen CI gate overlay styles.
+ * Ensures the gate is visible by default and covers the entire viewport.
+ */
 
-#gate,
-#ci-gate {
+.ci-gate {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000; /* Highest layer */
   overflow: hidden;
-}
-
-/* Gate video backgrounds */
-
-#gate .gate-video,
-#ci-gate .ci-gate-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-}
-
-/* Overlay content containers */
-
-#gate .gate-buttons,
-#ci-gate .ci-gate-overlay {
-  position: relative;
-  z-index: 1;
+  background-color: #000;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 1.5rem;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* State to close the gate gracefully */
+.ci-gate.ci-gate-closed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ci-gate-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  filter: brightness(0.6); /* Darken video for text contrast */
+}
+
+.ci-gate-overlay {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  color: #f5f0e6;
-  text-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+  max-width: 90%;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
 }
 
-/* Gate buttons (first overlay) */
-
-#gate .gate-btn {
-  min-width: 180px;
-  padding: 0.7rem 1.4rem;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-family: inherit;
-  background: rgba(15, 223, 209, 0.95);
-  color: #000;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-}
-
-#gate .gate-btn:hover {
-  filter: brightness(1.05);
-}
-
-/* CI gate titles & text */
-
-#ci-gate .ci-gate-title {
-  font-size: 2rem;
+.ci-gate-title {
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  color: #0fdfd1; /* Theme color highlight */
 }
 
-#ci-gate .ci-gate-text {
-  max-width: 420px;
-  font-size: 0.98rem;
+.ci-gate-text {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
   line-height: 1.5;
-  margin-bottom: 1rem;
 }
 
-/* CI gate buttons */
-
-#ci-gate .ci-gate-buttons {
+.ci-gate-buttons {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: center;
 }
 
-#ci-gate .ci-gate-btn {
-  min-width: 160px;
-  padding: 0.65rem 1.4rem;
-  border-radius: 999px;
+.ci-gate-btn {
+  padding: 0.75rem 1.5rem;
   border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-family: inherit;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
 }
 
-#ci-gate .ci-gate-btn-primary {
-  background: rgba(15, 223, 209, 0.95);
+.ci-gate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ci-gate-btn-primary {
+  background-color: #0fdfd1;
   color: #000;
 }
 
-#ci-gate .ci-gate-btn-secondary {
-  background: rgba(0, 0, 0, 0.65);
-  color: #f5f0e6;
-  border: 1px solid rgba(245, 240, 230, 0.4);
+.ci-gate-btn-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-#ci-gate .ci-gate-btn-primary:hover,
-#ci-gate .ci-gate-btn-secondary:hover {
-  filter: brightness(1.05);
-}
-
-/* When CI gate is closed via localStorage flag, hide it */
-
-.ci-gate.ci-gate-closed {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease-out;
-}
-
-/* Optional fade-out for #gate when gate.js fades/removes it */
-
-#gate {
-  transition: opacity 0.35s ease-out;
+/* Ensure the main UI is visible once the gate is gone */
+.page-shell {
+  opacity: 1;
+  transition: opacity 0.5s;
 }

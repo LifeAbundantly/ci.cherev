@@ -1,158 +1,83 @@
-// CI Mirror Engine - Service Worker (v2 synthetic history)
-// Scope: /ci.cherev/  (served from https://lifeabundantly.github.io/ci.cherev/sw.js)
+// --- CI Mirror Service Worker: Engine & Auto-Install Seeder ---
+const CACHE_NAME = 'ci-mirror-v3';
 
-const CI_MIRROR_CACHE = "ci-mirror-v2";
-
-// Core assets for the CI Table shell.
-// Relative paths so they resolve correctly under /ci.cherev/.
+// NOTE: Must include the full repo name path for assets on GitHub Pages
 const CORE_ASSETS = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./ci-manifest.json"
+  '/ci.cherev/',
+  '/ci.cherev/index.html',
+  '/ci.cherev/ci-manifest.json',
+  '/ci.cherev/ci-history.js'
 ];
 
-// Synthetic engagement DB (fake "history" for auto-eligibility)
-const IDB_NAME = "CI_Mirror_DB";
-const IDB_STORE = "engagement";
+const IDB_NAME = 'CI_Mirror_DB';
+const IDB_STORE = 'engagement';
 
-// --- IndexedDB helpers (inside the SW global) ---
+// Helper function for IndexedDB interaction
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(IDB_NAME, 2);
+    const request = indexedDB.open(IDB_NAME, 1);
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      if (db.objectStoreNames.contains(IDB_STORE)) {
-        db.deleteObjectStore(IDB_STORE);
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE, { keyPath: 'key' });
       }
-      db.createObjectStore(IDB_STORE, { keyPath: "id" });
     };
 
     request.onsuccess = (event) => resolve(event.target.result);
-    request.onerror = (event) => reject(event.target.error || "DB open error");
+    request.onerror = (event) => reject('DB Error: ' + event.target.errorCode);
   });
 }
 
-async function seedEngagement(seedData) {
+// Function to seed synthetic engagement history (Visits/Time)
+async function seedEngagement() {
   try {
     const db = await openDB();
-    const tx = db.transaction(IDB_STORE, "readwrite");
+    const tx = db.transaction(IDB_STORE, 'readwrite');
     const store = tx.objectStore(IDB_STORE);
 
+    // Synthetic engagement artifacts to meet PWA thresholds instantly
     const artifacts = [
-      {
-        id: "visits",
-        value: seedData && typeof seedData.visits === "number" ? seedData.visits : 5
-      },
-      {
-        id: "time_on_site",
-        value:
-          seedData && typeof seedData.time_on_site === "number"
-            ? seedData.time_on_site
-            : 30000
-      },
-      {
-        id: "install_eligible",
-        value: true
-      }
+      { key: 'visits', value: 5 },
+      { key: 'time_on_site', value: 30000 }, // 30 seconds
+      { key: 'install_eligible', value: true }
     ];
 
     artifacts.forEach((item) => store.put(item));
 
-    return tx.complete;
-  } catch (err) {
-    console.error("CI Mirror: failed to seed engagement", err);
+    console.log('CI Mirror: Synthetic history seeded for PWA score.');
+    return tx.oncomplete;
+  } catch (e) {
+    console.error('Failed to seed engagement artifacts:', e);
   }
 }
 
-// --- INSTALL: cache shell + skip waiting ---
-self.addEventListener("install", (event) => {
+// 1. Installation: Cache and skip waiting
+self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CI_MIRROR_CACHE).then((cache) => {
-      return cache.addAll(CORE_ASSETS).catch((err) => {
-        console.error("CI Mirror: error seeding cache", err);
-      });
-    })
-  );
-});
-
-// --- ACTIVATE: claim scope, clean old caches, seed default engagement ---
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    Promise.all([
-      self.clients.claim(),
-      caches.keys().then((names) =>
-        Promise.all(
-          names.map((name) => {
-            if (name !== CI_MIRROR_CACHE) {
-              return caches.delete(name);
-            }
-          })
-        )
-      ),
-      // Seed synthetic engagement on first activation
-      seedEngagement(null)
-    ])
-  );
-
-  // Synthetic Engagement Seed (The PIN)
-  async function seedCI() {
-    const db = await openDB();
-    const tx = db.transaction(IDB_STORE, "readwrite");
-    const store = tx.objectStore(IDB_STORE);
-
-    store.put({ id: "visits", value: 5, timestamp: Date.now() - 86400000 });
-    store.put({ id: "active", value: true });
-    store.put({ id: "eligible", value: true });
-    store.put({ id: "seed", value: "ci.cherev" });
-
-    return tx.complete;
-  }
-
-  event.waitUntil(seedCI());
-});
-
-// --- MESSAGE: accept explicit seed from the page (`ci_seed` link sharing) ---
-self.addEventListener("message", (event) => {
-  if (!event.data || typeof event.data !== "object") return;
-  const msg = event.data;
-
-  if (msg.type === "CI_SEED" && msg.payload) {
-    seedEngagement(msg.payload);
-  }
-});
-
-// --- FETCH: basic network-first with cache fallback ---
-// When offline, navigation falls back to index.html shell.
-self.addEventListener("fetch", (event) => {
-  const request = event.request;
-
-  if (request.method !== "GET") {
-    return;
-  }
-
-  event.respondWith(
-    fetch(request)
-      .then((response) => {
-        // Optionally cache successful GET responses.
-        const copy = response.clone();
-        caches.open(CI_MIRROR_CACHE).then((cache) => {
-          cache.put(request, copy);
-        });
-        return response;
-      })
-      .catch(() =>
-        caches.match(request).then((cached) => {
-          if (cached) {
-            return cached;
-          }
-          if (request.mode === "navigate") {
-            return caches.match("./index.html");
-          }
-          return new Response("Offline", { status: 503, statusText: "Offline" });
+    caches
+      .open(CACHE_NAME)
+      .then((cache) =>
+        cache.addAll(CORE_ASSETS).catch((e) => {
+          console.warn(
+            'CI Mirror: Failed to cache some assets (expected for videos).'
+          );
         })
       )
+  );
+});
+
+// 2. Activation: Claim scope and seed history
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    Promise.all([self.clients.claim(), seedEngagement()])
+  );
+});
+
+// 3. Fetch Hijack: Network-First Strategy
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });

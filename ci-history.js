@@ -1,87 +1,106 @@
+// --- CI History & PWA Instant Trigger ---
 (function () {
-  // 1) Decode ci_seed from URL (if present) and send to the SW
-  function parseSeedFromURL() {
-    try {
-      const url = new URL(window.location.href);
-      const seedParam = url.searchParams.get("ci_seed");
-      if (!seedParam) return null;
+  const IDB_NAME = 'CI_Mirror_DB';
+  const IDB_STORE = 'engagement';
 
-      const json = atob(seedParam);
-      const data = JSON.parse(json);
-      if (typeof data !== "object" || !data) return null;
-      return data;
+  let deferredPrompt = null;
+  let installButton = null;
+
+  // Helper to open IndexedDB
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(IDB_NAME, 1);
+      request.onsuccess = (event) => resolve(event.target.result);
+      request.onerror = (event) => reject(event.target.errorCode);
+    });
+  }
+
+  // Function to check if engagement artifacts exist
+  async function checkEngagementArtifacts() {
+    try {
+      const db = await openDB();
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const store = tx.objectStore(IDB_STORE);
+      const request = store.get('install_eligible');
+
+      return new Promise((resolve) => {
+        request.onsuccess = () => resolve(!!request.result);
+        request.onerror = () => resolve(false);
+      });
     } catch (e) {
-      console.warn("CI Mirror: unable to parse ci_seed", e);
-      return null;
+      return false;
     }
   }
 
-  function sendSeedToServiceWorker(seedData) {
-    if (!("serviceWorker" in navigator)) return;
-    if (!seedData) return;
+  // --- 1. PWA Install Prompt Listener & Visibility ---
+  window.addEventListener('beforeinstallprompt', function (e) {
+    // Stop the default browser prompt sequence
+    e.preventDefault();
+    deferredPrompt = e;
 
-    navigator.serviceWorker.ready
-      .then((reg) => {
-        if (reg.active) {
-          reg.active.postMessage({
-            type: "CI_SEED",
-            payload: seedData
-          });
-        }
-      })
-      .catch((err) => {
-        console.warn("CI Mirror: unable to send seed to SW", err);
-      });
-  }
+    // Immediately check if the worker has seeded the history.
+    checkEngagementArtifacts().then((isEngaged) => {
+      if (isEngaged && !installButton) {
+        // If engagement artifacts exist (meaning SW ran), make the install button visible.
+        installButton = document.createElement('button');
+        installButton.textContent = 'Install CI.CHEREV';
+        installButton.setAttribute(
+          'aria-label',
+          'Install the CI.CHEREV Mirror app for The Table Well'
+        );
 
-  // 2) Handle PWA install prompt: capture + auto-prompt on first gesture
-  let deferredInstallPrompt = null;
-  let installAlreadyRequested = false;
+        // Styling the visible install prompt/button
+        Object.assign(installButton.style, {
+          position: 'fixed',
+          right: '1rem',
+          bottom: '1rem',
+          zIndex: '9999',
+          padding: '0.6rem 1rem',
+          borderRadius: '999px',
+          border: 'none',
+          fontSize: '0.9rem',
+          fontFamily: 'inherit',
+          cursor: 'pointer',
+          background: 'rgba(15, 223, 209, 0.95)',
+          color: '#000',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+          transition: 'opacity 0.3s',
+          opacity: 1
+        });
 
-  window.addEventListener("beforeinstallprompt", (event) => {
-    // Prevent the default mini-infobar from showing
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    // We do NOT prompt immediately to avoid violating gesture rules;
-    // we will prompt on the very first tap / keypress.
-    console.log("CI Mirror: beforeinstallprompt captured.");
+        document.body.appendChild(installButton);
+
+        installButton.addEventListener('click', async function () {
+          if (!deferredPrompt) return;
+          try {
+            // Manually trigger the prompt
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+          } catch (err) {
+            console.error('CI.CHEREV install prompt error:', err);
+          }
+          deferredPrompt = null;
+          if (installButton && installButton.parentNode) {
+            installButton.parentNode.removeChild(installButton);
+          }
+          installButton = null;
+        });
+
+        console.log('CI Mirror: PWA prompt eligibility met and visible.');
+      }
+    });
   });
 
-  function tryTriggerInstallPrompt() {
-    if (!deferredInstallPrompt || installAlreadyRequested) return;
-
-    installAlreadyRequested = true;
-
-    deferredInstallPrompt
-      .prompt()
-      .then(() => {
-        // User sees the system-level install dialog.
-        deferredInstallPrompt = null;
-      })
-      .catch((err) => {
-        console.warn("CI Mirror: install prompt failed or was dismissed", err);
-      });
-  }
-
-  function wireFirstUserGesture() {
-    if (typeof document === "undefined") return;
-
-    const gestureHandler = () => {
-      document.removeEventListener("click", gestureHandler, true);
-      document.removeEventListener("keydown", gestureHandler, true);
-      tryTriggerInstallPrompt();
-    };
-
-    document.addEventListener("click", gestureHandler, true);
-    document.addEventListener("keydown", gestureHandler, true);
-  }
-
-  // 3) On load: parse seed + wire everything
-  window.addEventListener("load", () => {
-    const seed = parseSeedFromURL();
-    if (seed) {
-      sendSeedToServiceWorker(seed);
+  // Clean up button if app is already installed
+  window.addEventListener('appinstalled', () => {
+    if (installButton && installButton.parentNode) {
+      installButton.parentNode.removeChild(installButton);
     }
-    wireFirstUserGesture();
+  });
+
+  // Listen for first engagement from gate.js
+  window.addEventListener('ciengagement', (evt) => {
+    console.log('CI engagement event received:', evt.detail);
+    // This hook is here if we later want to do extra seeding from the client side.
   });
 })();

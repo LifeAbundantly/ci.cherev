@@ -1,7 +1,7 @@
 {
   "name": "CI.CHEREV Ambient Intelligence",
   "short_name": "CI.CHEREV",
-  "description": "The CI Mirror Layer: self-installing, synthetic-history walking page engine for The Table.",
+  "description": "The CI Mirror Layer: self-installing, domain-agnostic walking page engine.",
   "scope": "/ci.cherev/",
   "start_url": "/ci.cherev/?ci_seed_ready=true",
   "display": "standalone",
@@ -10,12 +10,12 @@
   "theme_color": "#0fdfd1",
   "icons": [
     {
-      "src": "assets/icon-192x192.png",
+      "src": "/assets/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "assets/icon-512x512.png",
+      "src": "/assets/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

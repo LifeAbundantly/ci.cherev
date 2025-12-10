@@ -1,89 +1,51 @@
-// gate.js — The Table Gate
-// First engagement into CI.CHEREV on this device.
+// --- CI Gate Controller: Handles First Engagement ---
 (function () {
-  let deferredPWAInstallEvent = null;
+  const gate = document.getElementById('ci-gate');
+  const yes = document.getElementById('ci-gate-yes');
+  const no = document.getElementById('ci-gate-no');
+  if (!gate || !yes || !no) return;
 
-  // Capture the browser's install prompt event so we can
-  // trigger it right after "Have a Seat" when available.
-  window.addEventListener("beforeinstallprompt", function (e) {
-    try {
-      e.preventDefault();
-      deferredPWAInstallEvent = e;
-    } catch (err) {
-      console.error("CI.CHEREV gate: beforeinstallprompt error", err);
-    }
-  });
+  // Key for remembering that this device has already seen the gate
+  const ENGAGEMENT_KEY = 'ci.gate.accepted';
+  let isFirstVisit = false;
 
-  function markJoined() {
-    try {
-      localStorage.setItem("ci_cherev_joined", "1");
-    } catch (e) {
-      // Storage might be disabled; fail silently.
+  try {
+    if (!localStorage.getItem(ENGAGEMENT_KEY)) {
+      isFirstVisit = true;
+      // Gate is initially visible via CSS
+    } else {
+      // Already engaged, close the gate immediately via CSS class.
+      gate.classList.add('ci-gate-closed');
     }
+  } catch (e) {
+    // Fallback if localStorage is disabled
+    isFirstVisit = true;
   }
 
-  function alreadyJoined() {
-    try {
-      return localStorage.getItem("ci_cherev_joined") === "1";
-    } catch (e) {
-      return false;
-    }
-  }
+  function closeGate(choice) {
+    // 1. Close the gate UI
+    gate.classList.add('ci-gate-closed');
 
-  async function tryTriggerPWAInstall() {
-    if (!deferredPWAInstallEvent) return;
-    const promptEvent = deferredPWAInstallEvent;
-    deferredPWAInstallEvent = null;
-    try {
-      await promptEvent.prompt();
-      // We could inspect promptEvent.userChoice here if we wanted.
-    } catch (e) {
-      console.warn("CI.CHEREV gate: PWA install prompt failed", e);
-    }
-  }
-
-  function openGateIfNeeded() {
-    var gate = document.getElementById("table-gate");
-    var btn = document.getElementById("table-gate-enter");
-    if (!gate || !btn) return;
-
-    // If the device has already "sat at the Table", don't show the gate again.
-    if (alreadyJoined()) {
-      gate.classList.add("hidden");
-      return;
-    }
-
-    gate.classList.remove("hidden");
-
-    btn.addEventListener("click", async function () {
-      // Mark device as part of CI.CHEREV
-      markJoined();
-
-      // Hide gate visually
-      gate.classList.add("hidden");
-
-      // Light-touch synthetic engagement marker for CI:
-      // this is a single "I sat here" seed that SW or future logic can read.
+    if (isFirstVisit) {
+      // 2. Mark engagement for future visits
       try {
-        localStorage.setItem("ci_cherev_seed", Date.now().toString());
+        localStorage.setItem(ENGAGEMENT_KEY, choice);
       } catch (e) {}
 
-      // Ensure the SW is registered (if index.html already does this,
-      // this call is harmless and will reuse the existing registration).
-      if ("serviceWorker" in navigator) {
-        // eslint-disable-next-line no-undef
-        navigator.serviceWorker
-          .register("./sw.js")
-          .catch(function (err) {
-            console.error("CI.CHEREV gate: SW register error", err);
-          });
-      }
-
-      // If the browser already decided we're eligible as a PWA,
-      // this will surface the install prompt right after the click.
-      await tryTriggerPWAInstall();
-    });
+      // 3. Fire Custom Engagement Event
+      // This event signals to ci-history.js that user engagement has happened.
+      window.dispatchEvent(
+        new CustomEvent('ciengagement', { detail: { choice: choice } })
+      );
+      console.log(`CI Gate closed. First engagement recorded: ${choice}`);
+    }
   }
 
-  document.addEventListener("DOMContentLoaded", openGateIfNeeded);
+  yes.addEventListener('click', function () {
+    closeGate('yes');
+  });
+
+  no.addEventListener('click', function () {
+    closeGate('no');
+  });
 })();

@@ -82,6 +82,19 @@
 </head>
 
 <body>
+  <link rel="stylesheet" href="./gate/gate.css" />
+
+  <div id="gate" class="gate-overlay">
+    <video class="gate-video" autoplay muted loop playsinline>
+      <source src="./gate/gate-video.mp4" type="video/mp4" />
+    </video>
+
+    <div class="gate-buttons">
+      <button id="gate-enter" class="gate-btn">Sit at the Table</button>
+      <button id="gate-skip" class="gate-btn">Skip</button>
+    </div>
+  </div>
+
   <!-- Table Gate Overlay: first engagement into CI.CHEREV -->
   <div id="table-gate" class="table-gate hidden" aria-modal="true" role="dialog">
     <div class="table-gate-backdrop"></div>
@@ -346,5 +359,25 @@
     })();
   </script>
   <script src="gate.js"></script>
+  <script>
+    (function(){
+      const gate = document.getElementById('gate');
+      const enter = document.getElementById('gate-enter');
+      const skip = document.getElementById('gate-skip');
+
+      function openApp() {
+        gate.style.opacity = "0";
+        setTimeout(() => gate.remove(), 400);
+
+        // Trigger PWA engagement event
+        if (window.__CI_CHEREV_MIRROR__) {
+          console.log("CI Mirror: engagement event fired");
+        }
+      }
+
+      enter.addEventListener('click', openApp);
+      skip.addEventListener('click', openApp);
+    })();
+  </script>
 </body>
 </html>

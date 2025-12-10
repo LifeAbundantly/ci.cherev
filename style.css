@@ -410,3 +410,121 @@ html[data-ci-mirror="active"] body::before {
     font-size: 1.5rem;
   }
 }
+
+/* --------------------------- CI.GATE OVERLAY --------------------------- */
+
+.ci-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4), #000);
+  overflow: hidden;
+}
+
+/* When closed, the gate disappears and the normal Table UI shows. */
+.ci-gate-closed {
+  display: none;
+}
+
+.ci-gate-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.2) contrast(1.1) brightness(0.9);
+}
+
+.ci-gate-overlay {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 1.5rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.25rem;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 36px rgba(0, 0, 0, 0.85);
+  text-align: center;
+  color: #f5f5f5;
+}
+
+.ci-gate-title {
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.ci-gate-text {
+  font-size: 0.98rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  opacity: 0.92;
+}
+
+.ci-gate-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.ci-gate-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.98rem;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+    background 0.12s ease-out, color 0.12s ease-out;
+}
+
+.ci-gate-btn-primary {
+  background: linear-gradient(135deg, #0fdfd1, #64ffda);
+  color: #021316;
+  box-shadow: 0 0 20px rgba(15, 223, 209, 0.7);
+}
+
+.ci-gate-btn-secondary {
+  background: transparent;
+  color: #e0f7fa;
+  border: 1px solid rgba(224, 247, 250, 0.35);
+}
+
+.ci-gate-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 26px rgba(0, 0, 0, 0.8);
+}
+
+.ci-gate-btn-primary:hover {
+  box-shadow: 0 0 28px rgba(15, 223, 209, 0.9);
+}
+
+.ci-gate-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.7);
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .ci-gate-overlay {
+    padding: 1.25rem 1rem;
+  }
+  .ci-gate-title {
+    font-size: 1.25rem;
+  }
+  .ci-gate-text {
+    font-size: 0.9rem;
+  }
+  .ci-gate-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

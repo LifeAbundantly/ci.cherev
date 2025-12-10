@@ -122,7 +122,36 @@
       </div>
     </div>
   </div>
-  <!-- Fixed background image for the Table Well -->
+  <!-- CI.CHEREV Gate: lightning loop + first encounter -->
+  <div id="ci-gate" class="ci-gate">
+    <video
+      id="ci-gate-video"
+      class="ci-gate-video"
+      src="assets/video/Intro-Loop.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+
+    <div class="ci-gate-overlay">
+      <h1 class="ci-gate-title">Welcome to the Table</h1>
+      <p class="ci-gate-text">
+        This is your first encounter with the Table. The House would like to
+        interview you and begin shaping your inheritance story.
+      </p>
+
+      <div class="ci-gate-buttons">
+        <button id="ci-gate-yes" class="ci-gate-btn ci-gate-btn-primary">
+          Have a seat
+        </button>
+        <button id="ci-gate-no" class="ci-gate-btn ci-gate-btn-secondary">
+          Not right now
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="background" aria-hidden="true"></div>
 
   <main class="page-shell" aria-label="The Table Well">
@@ -382,6 +411,48 @@
 
       enter.addEventListener('click', openApp);
       skip.addEventListener('click', openApp);
+    })();
+  </script>
+  <script>
+    // CI.CHEREV Gate Controller
+    (function () {
+      var gate = document.getElementById("ci-gate");
+      var yes = document.getElementById("ci-gate-yes");
+      var no = document.getElementById("ci-gate-no");
+
+      if (!gate || !yes || !no) return;
+
+      function closeGate(choice) {
+        gate.classList.add("ci-gate-closed");
+        try {
+          // Remember on this device that they already passed the gate.
+          localStorage.setItem("ci.gate.accepted", choice);
+        } catch (e) {
+          // ignore storage failures
+        }
+
+        // HOOK: this is where PWA install / interview flow will be wired later.
+        // For now, just hand control back to the Table page.
+      }
+
+      yes.addEventListener("click", function () {
+        closeGate("yes");
+        // TODO: start interview flow here (future)
+      });
+
+      no.addEventListener("click", function () {
+        closeGate("no");
+      });
+
+      // If they've already accepted the gate on this device, hide it immediately.
+      try {
+        var accepted = localStorage.getItem("ci.gate.accepted");
+        if (accepted) {
+          gate.classList.add("ci-gate-closed");
+        }
+      } catch (e) {
+        // if storage fails, we just show the gate again
+      }
     })();
   </script>
 </body>

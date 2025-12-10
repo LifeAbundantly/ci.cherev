@@ -6,133 +6,183 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
+    <title>The Table • AKDmediaX</title>
 
-    <title>The Table Well • CI • Covenant & Communion Intelligence</title>
-
-    <!-- Primary identity & SEO for CI / Cherev / Table Well -->
+    <!-- Minimal meta; no CI spelled out -->
     <meta
       name="description"
-      content="The Table Well is the first public room of CI — Covenant & Communion Intelligence — a Kingdom table where inheritance, vision, and creativity are stewarded in the presence of Yeshua."
+      content="The Table is a Kingdom creative space hosted by AKDmediaX."
     />
-    <meta
-      name="keywords"
-      content="CI, Covenant Intelligence, Communion Intelligence, Cherev, The Table Well, AKDmediaX, Abba's Kingdom Donation, Kingdom creativity, Walk With Yeshua"
-    />
-
-    <!-- Canonical: the true face will be ci.cherev -->
     <link rel="canonical" href="https://ci.cherev/" />
 
-    <!-- Open Graph / social preview -->
+    <!-- Social preview just points at the table image -->
     <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="The Table Well • CI • Covenant & Communion Intelligence"
-    />
+    <meta property="og:title" content="The Table • AKDmediaX" />
     <meta
       property="og:description"
-      content="Sit and feast. Taste and see. Share the vision you long to build, and let the House of Cherev help you steward it."
+      content="Sit and feast. Share what you long to build."
     />
-    <meta property="og:url" content="https://ci.cherev/" />
     <meta
       property="og:image"
-      content="https://lifeabundantly.github.io/Table_Well.jpeg"
+      content="https://lifeabundantly.github.io/ci.cherev/Table_Well.jpeg"
     />
 
-    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="The Table Well • CI • Covenant & Communion Intelligence"
-    />
+    <meta name="twitter:title" content="The Table • AKDmediaX" />
     <meta
       name="twitter:description"
-      content="A Kingdom table where technology bows to Presence and inheritance is stewarded together."
+      content="A creative fellowship where tech bows to Presence."
     />
     <meta
       name="twitter:image"
-      content="https://lifeabundantly.github.io/Table_Well.jpeg"
+      content="https://lifeabundantly.github.io/ci.cherev/Table_Well.jpeg"
     />
-
-    <!-- Structured data: Website / Table Well -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "The Table Well • CI",
-        "url": "https://ci.cherev/",
-        "description": "The Table Well is the first public room of CI — Covenant & Communion Intelligence — a Kingdom table where inheritance, vision, and creativity are stewarded in the presence of Yeshua.",
-        "publisher": {
-          "@type": "Organization",
-          "name": "AKDmediaX"
-        }
-      }
-    </script>
 
     <!-- Main styles -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- PWA manifest -->
+    <!-- PWA manifest & theme color (we'll tune later) -->
     <link rel="manifest" href="ci-manifest.json" />
     <meta name="theme-color" content="#0fdfd1" />
 
-    <!-- Service Worker registration for CI Mirror Engine -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function () {
-          navigator.serviceWorker
-            .register("./sw.js")
-            .catch(function (err) {
-              console.error("CI Mirror SW registration failed:", err);
-            });
-        });
+    <!-- Inline gate styling so it ALWAYS shows -->
+    <style>
+      /* Full-screen CI gate overlay */
+      #ci-gate {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
       }
-    </script>
-  </head>
-  <body>
-    <!-- CI.CHEREV Gate: AKDmediaX lightning intro + first encounter -->
-    <div id="ci-gate" class="ci-gate">
-      <video id="ci-gate-video" class="ci-gate-video" src="assets/intro-loop.mp4" autoplay muted loop playsinline></video>
 
-      <div class="ci-gate-overlay">
+      #ci-gate.ci-gate-closed {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      #ci-gate-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .ci-gate-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #fff;
+        padding: 2rem;
+        max-width: 90%;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 12px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+      }
+
+      .ci-gate-title {
+        font-size: clamp(2rem, 7vw, 3.5rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #0fdfd1;
+        text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+      }
+
+      .ci-gate-text {
+        font-size: clamp(1.05rem, 3.5vw, 1.4rem);
+        margin-bottom: 2rem;
+        line-height: 1.5;
+        opacity: 0.95;
+      }
+
+      .ci-gate-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .ci-gate-btn {
+        padding: 0.8rem 1.6rem;
+        border-radius: 999px;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+
+      .ci-gate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+      }
+
+      .ci-gate-btn-primary {
+        background: rgba(15, 223, 209, 0.95);
+        color: #000;
+      }
+
+      .ci-gate-btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+    </style>
+
+    <!-- DO NOT try to change hostname here; that’s what was breaking things -->
+  </head>
+
+  <body>
+    <!-- SINGLE GATE OVERLAY: always rendered first -->
+    <div id="ci-gate">
+      <video
+        id="ci-gate-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="Table_Well.jpeg"
+      >
+        <!-- This file already exists in /assets/ -->
+        <source src="assets/intro-loop.mp4" type="video/mp4" />
+      </video>
+
+      <div class="ci-gate-content">
         <h1 class="ci-gate-title">Welcome to the Table</h1>
         <p class="ci-gate-text">
-          This is your first encounter with the Table. The House would like to
-          interview you and begin shaping your inheritance story.
+          This is your first encounter with the Table.<br />
+          The House would like to interview you and begin shaping your
+          inheritance story.
         </p>
-
         <div class="ci-gate-buttons">
-          <button
-            id="ci-gate-yes"
-            class="ci-gate-btn ci-gate-btn-primary"
-          >
+          <button id="ci-gate-yes" class="ci-gate-btn ci-gate-btn-primary">
             Have a seat
           </button>
-          <button
-            id="ci-gate-no"
-            class="ci-gate-btn ci-gate-btn-secondary"
-          >
+          <button id="ci-gate-no" class="ci-gate-btn ci-gate-btn-secondary">
             Not right now
           </button>
         </div>
-
-        <p class="ci-gate-note">
-          By stepping in, your device quietly remembers this moment so the Table
-          can meet you here again.
-        </p>
       </div>
     </div>
 
-    <!-- Fixed background image for the Table Well -->
+    <!-- BACKGROUND image and existing Table layout (from your current page) -->
     <div class="background" aria-hidden="true"></div>
 
-    <main class="page-shell" aria-label="The Table Well">
-      <!-- Header / Invitation -->
+    <main class="page-shell" aria-label="The Table">
       <header class="hero">
         <h1 class="title">Your Inheritance is Served</h1>
         <h2 class="subtitle">Sit and Feast</h2>
       </header>
 
-      <!-- Central Table chat bar -->
       <section
         class="table-input"
         aria-label="Table conversation input"
@@ -174,7 +224,6 @@
         </form>
       </section>
 
-      <!-- Footer / Identity -->
       <footer class="footer" aria-label="AKDmediaX identity">
         <div class="footer-text">
           <div class="brand">AKDmediaX</div>
@@ -183,14 +232,12 @@
             A Creative Fellowship Where Tech Bows to Presence
           </div>
 
-          <div class="line">
-            Redeeming Abba’s Kingdom Design
-          </div>
+          <div class="line">Redeeming Abba’s Kingdom Design</div>
 
           <div class="quote">
             “Embrace the truth and hold it close.<br />
-            Don’t let go of wisdom, instruction, and life-giving understanding.”
-            — TPT
+            Don’t let go of wisdom, instruction, and life-giving
+            understanding.” — TPT
           </div>
 
           <div class="rights">
@@ -200,14 +247,14 @@
       </footer>
     </main>
 
-    <!-- Right-side conversation panel (placeholder for CI mirror) -->
+    <!-- Conversation panel (same behavior as before) -->
     <aside
       id="conversation-panel"
       class="conversation-panel"
       aria-label="Table conversation stream"
     >
       <div class="conversation-header">
-        <span>The Table Well</span>
+        <span>The Table</span>
         <button
           type="button"
           class="panel-close"
@@ -216,17 +263,83 @@
           ✕
         </button>
       </div>
-
       <div class="conversation-body">
         <p class="conversation-placeholder">
           When the House is ready, this space will hold the living
-          conversation — responses, modes, and CI-powered guidance flowing
-          from the Table.
+          conversation — responses, modes, and guidance flowing from the
+          Table.
         </p>
       </div>
     </aside>
 
-    <!-- Simple front-end behavior for the chat panel -->
+    <!-- Synthetic history / PWA helper (your existing file) -->
+    <script src="ci-history.js"></script>
+
+    <!-- SERVICE WORKER REGISTRATION (simple; we’ll refine scope later) -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("./sw.js")
+            .catch(function (err) {
+              console.error("SW registration failed:", err);
+            });
+        });
+      }
+    </script>
+
+    <!-- CI GATE CONTROLLER: hides gate & fires engagement event -->
+    <script>
+      (function () {
+        const gate = document.getElementById("ci-gate");
+        const yes = document.getElementById("ci-gate-yes");
+        const no = document.getElementById("ci-gate-no");
+        if (!gate || !yes || !no) return;
+
+        const STORAGE_KEY = "ci.cherev.gate.seen";
+
+        // If this device has already passed the gate, remove it immediately.
+        try {
+          if (localStorage.getItem(STORAGE_KEY) === "true") {
+            gate.classList.add("ci-gate-closed");
+            return;
+          }
+        } catch (e) {
+          // if storage not available, we just show the gate every time
+        }
+
+        function dismiss(choice) {
+          gate.classList.add("ci-gate-closed");
+
+          try {
+            localStorage.setItem(STORAGE_KEY, "true");
+          } catch (e) {}
+
+          // Tell ci-history.js that a real engagement happened
+          try {
+            window.dispatchEvent(
+              new CustomEvent("ciengagement", { detail: { choice } })
+            );
+          } catch (e) {
+            console.warn("ciengagement event error:", e);
+          }
+        }
+
+        yes.addEventListener("click", function () {
+          dismiss("yes");
+        });
+
+        no.addEventListener("click", function () {
+          dismiss("no");
+        });
+
+        // Preload video for smoother first frame
+        const vid = document.getElementById("ci-gate-video");
+        if (vid && vid.load) vid.load();
+      })();
+    </script>
+
+    <!-- Existing conversation-panel JS (same as your previous index) -->
     <script>
       (function () {
         const form = document.querySelector(".chat-form");
@@ -234,13 +347,11 @@
         const panel = document.getElementById("conversation-panel");
         const closeBtn = document.querySelector(".panel-close");
         const body = document.querySelector(".conversation-body");
-
         if (!form || !input || !panel || !closeBtn || !body) return;
 
         function openPanel() {
           panel.classList.add("open");
         }
-
         function closePanel() {
           panel.classList.remove("open");
         }
@@ -262,7 +373,7 @@
           const bubbleHouse = document.createElement("div");
           bubbleHouse.className = "bubble bubble-house";
           bubbleHouse.textContent =
-            "The Table has received your vision. In the CI mirror, this space will soon respond, guide, and help you build.";
+            "The Table has received your vision. In the mirror, this space will soon respond, guide, and help you build.";
           body.appendChild(bubbleHouse);
 
           input.value = "";
@@ -271,33 +382,9 @@
       })();
     </script>
 
-    <!-- CI mirror flag: just detection, no URL mutation -->
+    <!-- PWA install prompt helper (can stay as-is) -->
     <script>
       (function () {
-        try {
-          var loc = window.location;
-          var url = new URL(loc.href);
-
-          var hasCiParam =
-            url.search === "?ci.cherev" ||
-            url.searchParams.has("ci.cherev") ||
-            url.searchParams.get("ci") === "cherev";
-          var isCiHost = loc.hostname === "ci.cherev";
-
-          window.__CI_CHEREV_MIRROR__ = !!(hasCiParam || isCiHost);
-          document.documentElement.dataset.ciMirror =
-            window.__CI_CHEREV_MIRROR__ ? "active" : "inactive";
-        } catch (e) {
-          window.__CI_CHEREV_MIRROR__ = false;
-        }
-      })();
-    </script>
-
-    <!-- PWA install helper: shows "Install CI.CHEREV" when browser is ready -->
-    <script>
-      (function () {
-        if (!("serviceWorker" in navigator)) return;
-
         let deferredPrompt = null;
         let installButton = null;
 
@@ -311,24 +398,23 @@
           installButton.textContent = "Install CI.CHEREV";
           installButton.setAttribute(
             "aria-label",
-            "Install the CI.CHEREV Mirror app for The Table Well"
+            "Install the CI.CHEREV mirror app"
           );
-
-          installButton.style.position = "fixed";
-          installButton.style.right = "1rem";
-          installButton.style.bottom = "1rem";
-          installButton.style.zIndex = "9999";
-          installButton.style.padding = "0.6rem 1rem";
-          installButton.style.borderRadius = "999px";
-          installButton.style.border = "none";
-          installButton.style.fontSize = "0.9rem";
-          installButton.style.fontFamily = "inherit";
-          installButton.style.cursor = "pointer";
-          installButton.style.background =
-            "rgba(15, 223, 209, 0.95)";
-          installButton.style.color = "#000";
-          installButton.style.boxShadow =
-            "0 4px 16px rgba(0,0,0,0.25)";
+          Object.assign(installButton.style, {
+            position: "fixed",
+            right: "1rem",
+            bottom: "1rem",
+            zIndex: "9999",
+            padding: "0.6rem 1rem",
+            borderRadius: "999px",
+            border: "none",
+            fontSize: "0.9rem",
+            fontFamily: "inherit",
+            cursor: "pointer",
+            background: "rgba(15, 223, 209, 0.95)",
+            color: "#000",
+            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.25)",
+          });
 
           document.body.appendChild(installButton);
 
@@ -338,7 +424,7 @@
               deferredPrompt.prompt();
               await deferredPrompt.userChoice;
             } catch (err) {
-              console.error("CI.CHEREV install prompt error:", err);
+              console.error("Install prompt error:", err);
             }
             deferredPrompt = null;
             if (installButton && installButton.parentNode) {
@@ -347,45 +433,14 @@
             installButton = null;
           });
         });
-      })();
-    </script>
 
-    <!-- CI Gate Controller -->
-    <script>
-      (function () {
-        var gate = document.getElementById("ci-gate");
-        var yes = document.getElementById("ci-gate-yes");
-        var no = document.getElementById("ci-gate-no");
-
-        if (!gate || !yes || !no) return;
-
-        function closeGate(choice) {
-          gate.classList.add("ci-gate-closed");
-          try {
-            localStorage.setItem("ci.gate.accepted", choice);
-          } catch (e) {}
-        }
-
-        yes.addEventListener("click", function () {
-          closeGate("yes");
-        });
-
-        no.addEventListener("click", function () {
-          closeGate("no");
-        });
-
-        try {
-          var accepted = localStorage.getItem("ci.gate.accepted");
-          if (accepted) {
-            gate.classList.add("ci-gate-closed");
+        window.addEventListener("appinstalled", function () {
+          if (installButton && installButton.parentNode) {
+            installButton.parentNode.removeChild(installButton);
           }
-        } catch (e) {}
+          installButton = null;
+        });
       })();
     </script>
-
-    <!-- CI history seeding + any future logic -->
-    <script src="ci-history.js"></script>
-    <!-- gate.js can stay for now; it will no-op since #gate is gone -->
-    <script src="gate.js"></script>
   </body>
 </html>
